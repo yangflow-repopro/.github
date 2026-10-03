@@ -1,4 +1,4 @@
-<!-- template: adr-index.md v1 -->
+<!-- template: adr-index.md v2 -->
 <!-- docs/adr/README.md. One row per ADR file, titles equal to each file's H1 (check-docs). -->
 # Architecture Decision Records
 
