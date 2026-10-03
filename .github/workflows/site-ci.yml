@@ -26,8 +26,10 @@ jobs:
         with:
           python-version: ${{ inputs.python-version }}
 
+      # Sites vendor sitekit as scripts/sitekit/; the legacy per-site scripts are used until a site migrates.
       - name: i18n consistency
-        run: python3 scripts/check_i18n.py
+        run: |
+          if [ -f scripts/sitekit/check_i18n.py ]; then python3 scripts/sitekit/check_i18n.py; else python3 scripts/check_i18n.py; fi
 
       - name: Build
         run: python3 scripts/build.py
@@ -37,10 +39,11 @@ jobs:
           git diff --exit-code -- public/ || {
             echo "::error::public/ is stale; run scripts/build.py and commit the result"; exit 1; }
 
-      # Until every site vendors sitekit, run whichever checks the repository has.
       - name: Site check
         run: |
-          if [ -f scripts/check-site.py ]; then python3 scripts/check-site.py; else echo "no check-site.py"; fi
+          if [ -f scripts/sitekit/check_site.py ]; then python3 scripts/sitekit/check_site.py
+          elif [ -f scripts/check-site.py ]; then python3 scripts/check-site.py
+          else echo "no site check"; fi
 
       - name: Legal facts
         run: python3 scripts/check_facts.py
