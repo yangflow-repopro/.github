@@ -28,14 +28,14 @@ website repository. A website repository owns only:
 ## Checks (local and CI, identical)
 
 ```
-python3 scripts/check_i18n.py   # structure, tags, links, placeholders match English
+python3 scripts/sitekit/check_i18n.py   # structure, tags, links, placeholders match English
 python3 scripts/build.py        # regenerate public/
 git diff --exit-code public/    # committed output matches the sources
-python3 scripts/check-site.py   # missing pages, broken links and anchors, CSP violations
+python3 scripts/sitekit/check_site.py   # missing pages, broken links and anchors, CSP violations
 python3 scripts/check_facts.py  # legal facts consistent across languages
 ```
 
-`scripts/preview.py` serves `public/` locally with Cloudflare's trailing-slash and 404 behaviour.
+`scripts/sitekit/preview.py` serves `public/` locally with Cloudflare's trailing-slash and 404 behaviour.
 
 ## Deploy
 

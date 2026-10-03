@@ -8,6 +8,7 @@ The repository declares its type in `.repo-type` (app, website, library, templat
     {"forbidden": ["other-product", ...],      names that must not appear anywhere (case-insensitive)
      "allow": ["path/glob", ...],              files exempt from the name check
      "ignore": ["path/glob", ...],             files exempt from the reference checks
+     "external": ["docs/legal.md", ...],        paths that live in another repository (e.g. the app's)
      "pending": ["docs/design.md", ...]}       required documents whose template check is postponed
                                                (temporary, with a plan entry that removes it)
 
@@ -171,13 +172,18 @@ def main():
                     err(f"{rel}:{line}", f"mentions {m.group(0)!r}: documents and code describe this product only")
         if any(fnmatch.fnmatch(rel, g) for g in ignore) or rel.startswith("CHANGELOG"):
             continue
+        lines = text.split("\n")
         for m in re.finditer(r"§\s?\d|\bscenes?\s+\d|\bADR-\d+|(?<![\w.])M\d\b(?![\w-])", text):
             line = text[: m.start()].count("\n") + 1
+            if m.group(0)[0] == "M" and not rel.endswith(".md") and not lines[line - 1].lstrip().startswith(("//", "#", "*", "///")):
+                continue  # M<n> in code is only a milestone marker when it sits in a comment (SVG paths use it too)
             err(f"{rel}:{line}", f"numbered reference {m.group(0)!r}: link a stable anchor (docs/spec.md#slug), ADR file or screen instead")
         if True:
             for m in re.finditer(r"(?<![\w/.-])((?:docs|design)/[\w./-]*[\w-]\.(?:md|html))(#[\w-]+)?", text):
                 target = ROOT / m.group(1)
                 line = text[: m.start()].count("\n") + 1
+                if m.group(1) in config.get("external", []) and not target.is_file():
+                    continue
                 if not target.is_file():
                     err(f"{rel}:{line}", f"reference to missing file {m.group(1)}")
                 elif m.group(2) and m.group(2)[1:] not in anchors(target.read_text(encoding="utf-8")):

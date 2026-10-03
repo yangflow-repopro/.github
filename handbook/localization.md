@@ -50,5 +50,4 @@ Apps and websites ship the same nine languages. The language code differs betwee
 
 Strings may contain HTML; `{{root}}` in a link becomes the language's path prefix. Every language file has the
 same structure, the same HTML tags in the same order, the same link targets and placeholders as `en.json`
-(`check_i18n.py`). Legal pages and the FAQ carry a translation notice in every non-English language
-(see `legal.md`).
+(`check_i18n.py`). Legal pages carry a translation notice in every non-English language (see `legal.md`).

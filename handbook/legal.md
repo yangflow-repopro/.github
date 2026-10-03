@@ -34,6 +34,6 @@ product touches on the user's behalf. Everything else is the same wording patter
 - Company name in legal text: `yangflow` (copyright line: `Copyright (c) <year> yangflow. All rights reserved.`).
 - Support address: `support@<domain>`, the same on the website footer, in `SECURITY.md` and in the legal text.
 - Payments: processed by Dodo Payments as merchant of record; the terms say so once, in "Purchases and refunds".
-- Translations: every non-English legal page and FAQ opens with a notice that the English text is the
+- Translations: every non-English legal page opens with a notice that the English text is the
   reference. This includes Chinese.
 - "Last updated" is a month and year, changed whenever the text changes.
