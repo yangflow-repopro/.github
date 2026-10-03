@@ -101,6 +101,10 @@ jobs:
           done
           exit 1
 
+      - name: Release script tests
+        run: |
+          if [ -x scripts/test-release.sh ]; then scripts/test-release.sh; fi
+
       - name: Build (Release)
         run: |
           set -o pipefail
@@ -133,10 +137,6 @@ jobs:
             echo "attempt $attempt failed; retrying in 20s"; sleep 20
           done
           exit 1
-
-      - name: Release script tests
-        run: |
-          if [ -x scripts/test-release.sh ]; then scripts/test-release.sh; fi
 
       - name: Build (Release)
         run: |

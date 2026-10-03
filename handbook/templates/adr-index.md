@@ -11,6 +11,6 @@ record and mark the old one "superseded by NNNN".
 |---|---|---|
 | [0001](0001-title.md) | <Title, equal to the file's H1> | accepted |
 
-## Template
+## Record template
 
 See `handbook/templates/adr.md`.
