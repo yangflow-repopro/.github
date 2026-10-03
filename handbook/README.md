@@ -11,5 +11,11 @@ repositories link here and record only their differences.
 | [release.md](release.md) | Versions, tags, changelog, release pipeline, launch checklist |
 | [security.md](security.md) | Red lines, walkthroughs, scanning |
 | [website.md](website.md) | Static websites: generator, rules, checks, deploy |
+| [docs.md](docs.md) | The documentation system: map, rules, names, lifecycle |
+| [localization.md](localization.md) | Languages, adding a string, adding a language |
+| [legal.md](legal.md) | Legal pages: one source per fact, skeletons, fixed wording |
+| [agents.md](agents.md) | Working rules for AI collaborators |
+| [playbooks/](playbooks/add-feature.md) | Step lists: feature, screen, string, language, ADR, release, dependency |
+| [templates/](templates/manifest.json) | Templates for every document and which repository type needs which |
 
 Changing a rule: open a PR here, link it from the product PR that needs it.
