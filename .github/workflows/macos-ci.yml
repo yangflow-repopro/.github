@@ -43,8 +43,36 @@ on:
         default: "26.6"
 
 jobs:
+  # macOS minutes cost ten times Linux minutes. A pull request that only touches documents, design files,
+  # scripts that CI does not run or website-facing text does not need Xcode: this cheap job decides.
+  changes:
+    name: Changed files
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      build: ${{ steps.diff.outputs.build }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - id: diff
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.base_ref }}
+        run: |
+          if [ "$EVENT" != "pull_request" ]; then echo "build=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          files="$(git diff --name-only "origin/$BASE...HEAD")"
+          # Anything that is not plain documentation or design material can change the build.
+          if echo "$files" | grep -Evq '^(docs/|design/|README\.md$|AGENTS\.md$|CLAUDE\.md$|GEMINI\.md$|SECURITY\.md$|CHANGELOG(\.zh)?\.md$|THIRD_PARTY\.md$|LICENSE$|\.claude/|\.codex/|\.github/(copilot-instructions\.md|dependabot\.yml|pull_request_template\.md)$)'; then
+            echo "build=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "build=false" >> "$GITHUB_OUTPUT"; echo "Only documents changed: the Xcode jobs are skipped."
+          fi
+
   main:
     name: Current Xcode · xcodegen, format, build, test
+    needs: changes
+    if: ${{ needs.changes.outputs.build == 'true' }}
     runs-on: xcode-27
     timeout-minutes: 40
     steps:
@@ -88,7 +116,8 @@ jobs:
 
   compat:
     name: macOS 26 · build, test (compatibility)
-    if: ${{ inputs.run-compat }}
+    needs: changes
+    if: ${{ inputs.run-compat && needs.changes.outputs.build == 'true' }}
     runs-on: macos-26
     timeout-minutes: 40
     steps:
