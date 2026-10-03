@@ -78,7 +78,10 @@ Every PR runs the shared `macos-ci.yml` reusable workflow:
 
 | Job | Runner | Does |
 |---|---|---|
-| main | GitHub-hosted `xcode-27` (or the organization's self-hosted Mac via `main-runner`) | `xcodegen generate` + no diff · `swift-format lint --strict` · build (Release) · test |
+| main | GitHub-hosted `xcode-27` (current Xcode) | `xcodegen generate` + no diff · `swift-format lint --strict` · build (Release) · test |
 | compat | GitHub-hosted `macos-26`, previous Xcode | build (Release) · test; runs on push to `main` only |
 
 The compatibility job exists to catch APIs that are newer than the deployment target.
+
+All jobs run on GitHub-hosted runners; there are no self-hosted machines. macOS minutes on private
+repositories are billed at 10×, so the compatibility job is limited to pushes to `main`.

@@ -27,17 +27,21 @@ The appcast and downloads live on Cloudflare R2 behind `dl.<product-domain>`.
 
 ```
 bump.sh → PR → CI green → merge → git tag vX.Y.Z → push tag
-   └─► macos-release.yml (self-hosted Mac)
+   └─► macos-release.yml (GitHub-hosted macOS runner, `release` environment)
          archive → scan app → sign (Developer ID, timestamp) → notarize → staple
          → dmg → sign dmg → Gatekeeper check → Sparkle sign_update
          → upload dmg + appcast.xml + latest.json to R2 → verify download hash
          → GitHub Release (notes from CHANGELOG) → website changelog PR
 ```
 
-- The release workflow runs on the self-hosted runner: the Developer ID certificate, the notarytool
-  keychain profile and the Sparkle EdDSA private key stay in that Mac's login keychain and are never
-  uploaded anywhere. `scripts/release-credentials.sh` stores and inspects them.
-- R2 write credentials are organization secrets scoped to the release environment.
+- The release workflow runs on a GitHub-hosted macOS runner. Everything it needs is an organization
+  secret bound to the `release` environment: the Developer ID certificate (`.p12`, base64) and its
+  password, an App Store Connect API key for `notarytool`, the Sparkle EdDSA private key, and the R2
+  write credentials. The workflow imports the certificate and the Sparkle key into a temporary
+  keychain that is deleted when the job ends; nothing is written to the repository or to logs.
+- Local releases remain possible: `scripts/release-credentials.sh` keeps the same values in the
+  maintainer's login keychain for `scripts/release.sh`.
+- Secrets are rotated when a maintainer leaves and after any suspected exposure.
 - `scripts/release.sh --check` is the dry run; `scripts/test-release.sh` tests the script itself and runs
   in CI on every PR that touches it.
 - `release.sh` refuses to publish a build number that already exists in the appcast, a binary that

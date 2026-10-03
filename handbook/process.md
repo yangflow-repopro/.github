@@ -38,6 +38,9 @@ Spec ──► Design ──► Implement ──► Accept
 ## Branches and merging
 
 - `main` always builds, runs and has green tests. Only the maintainer merges into `main`.
+- Until the organization is on GitHub Team, private repositories have no branch protection; the rule
+  above is a convention. On Team, an organization ruleset enforces it: PR required, CI green,
+  no force-push, no deletion.
 - Feature branches: `feat/<topic>`, `fix/<topic>`, `docs/<topic>`, `design/<topic>`, `build/<topic>`,
   `ci/<topic>`, `refactor/<topic>`; prefix the milestone when attached: `feat/m3-service-list`.
 - PRs are squash-merged; the merged commit title is the PR title. Delete the branch after merging.
