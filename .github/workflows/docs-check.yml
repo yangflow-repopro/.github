@@ -16,8 +16,15 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - uses: actions/checkout@v5
         with:
           repository: yangflow-repopro/.github
           path: .org
-      - run: python3 .org/scripts/check-docs.py "$GITHUB_WORKSPACE"
+      - name: Check documents
+        env:
+          PR_BASE: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || '' }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: python3 .org/scripts/check-docs.py "$GITHUB_WORKSPACE"

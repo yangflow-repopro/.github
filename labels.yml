@@ -43,3 +43,9 @@
 - name: unverified
   color: "D4C5F9"
   description: Technical assumption not yet measured
+- name: no-changelog
+  color: "EDEDED"
+  description: A fix/feat PR that needs no changelog line
+- name: design-unchanged
+  color: "EDEDED"
+  description: UI code changed but the screen design did not

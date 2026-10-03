@@ -12,6 +12,12 @@ The repository declares its type in `.repo-type` (app, website, library, templat
      "pending": ["docs/design.md", ...]}       required documents whose template check is postponed
                                                (temporary, with a plan entry that removes it)
 
+Pull request checks run when PR_BASE is set (the base branch ref, e.g. origin/main) together with
+PR_TITLE and PR_LABELS (comma separated):
+  - a `feat` or `fix` PR that changes product code must change CHANGELOG.md (label `no-changelog` exempts)
+  - when design/screens/ exists, a change under a UI/<Screen>/ directory must change design/screens/
+    (label `design-unchanged` exempts)
+
 Exit status 1 when any check fails; every problem is printed as `path: message`.
 """
 import fnmatch
@@ -204,7 +210,26 @@ def main():
                     err(f"{rel}:{line}", f"reference to missing anchor {m.group(1)}{m.group(2)}")
 
 
+def pr_checks():
+    import os
+    base = os.environ.get("PR_BASE")
+    if not base:
+        return
+    title = os.environ.get("PR_TITLE", "")
+    labels = {l.strip() for l in os.environ.get("PR_LABELS", "").split(",") if l.strip()}
+    changed = subprocess.run(["git", "-C", str(ROOT), "diff", "--name-only", f"{base}...HEAD"], capture_output=True, text=True).stdout.split()
+    code = [f for f in changed if not f.startswith(("docs/", "scripts/", ".github/", "design/", ".claude/", ".codex/")) and "Tests/" not in f
+            and not f.endswith((".md", ".json", ".xcodeproj/project.pbxproj", ".yml"))]
+    if re.match(r"(feat|fix)(\(|:|!)", title) and code and "no-changelog" not in labels and "CHANGELOG.md" not in changed:
+        err("CHANGELOG.md", "a feat/fix PR that changes product code must add a line under [Unreleased] (or label the PR no-changelog)")
+    if (ROOT / "design/screens").is_dir() and "design-unchanged" not in labels:
+        ui = [f for f in changed if re.search(r"(^|/)UI/[^/]+/", f) and f.endswith(".swift")]
+        if ui and not any(f.startswith("design/screens/") for f in changed):
+            err("design/screens", f"UI code changed ({ui[0]}...) without a change under design/screens/ (or label the PR design-unchanged)")
+
+
 main()
+pr_checks()
 if errors:
     print("\n".join(errors))
     print(f"\n{len(errors)} problem(s)")
