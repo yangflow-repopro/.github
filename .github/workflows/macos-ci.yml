@@ -5,9 +5,9 @@
 #     ci:
 #       uses: yangflow-repopro/.github/.github/workflows/macos-ci.yml@main
 #       with:
-#         project: Loggia.xcodeproj
-#         scheme: Loggia
-#         lint-paths: Loggia LoggiaCore LoggiaTests
+#         project: <Name>.xcodeproj
+#         scheme: <Name>
+#         lint-paths: <Name> <Name>Core <Name>Tests
 #         run-compat: ${{ github.event_name == 'push' }}
 name: macOS CI
 

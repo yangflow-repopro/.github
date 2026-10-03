@@ -1,0 +1,23 @@
+# Reusable: checks a product repository's documents against the templates in this repository.
+#
+# Caller (in <repo>/.github/workflows/docs.yml):
+#   jobs:
+#     docs:
+#       uses: yangflow-repopro/.github/.github/workflows/docs-check.yml@main
+name: Docs check
+
+on:
+  workflow_call:
+
+jobs:
+  check-docs:
+    name: Documents match the templates
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
+        with:
+          repository: yangflow-repopro/.github
+          path: .org
+      - run: python3 .org/scripts/check-docs.py "$GITHUB_WORKSPACE"

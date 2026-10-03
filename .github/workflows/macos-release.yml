@@ -9,9 +9,9 @@
 #     release:
 #       uses: yangflow-repopro/.github/.github/workflows/macos-release.yml@main
 #       with:
-#         project: Loggia.xcodeproj
-#         scheme: Loggia
-#         sparkle-account: loggia
+#         project: <Name>.xcodeproj
+#         scheme: <Name>
+#         sparkle-account: <name>
 #       secrets: inherit
 #
 # Secrets (organization, environment `release`):
@@ -32,7 +32,7 @@ on:
         required: true
         type: string
       sparkle-account:
-        description: Keychain account name release.sh uses for the Sparkle key (barekeep, loggia)
+        description: Keychain account name release.sh uses for the Sparkle key (the lowercase product name)
         required: true
         type: string
       publish:

@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "pointers": [
+    "CLAUDE.md",
+    "GEMINI.md",
+    ".github/copilot-instructions.md"
+  ],
+  "types": {
+    "app": {
+      "README.md": "README.md",
+      "AGENTS.md": "AGENTS.md",
+      "SECURITY.md": "SECURITY.md",
+      "CHANGELOG.md": "CHANGELOG.md",
+      "CHANGELOG.zh.md": "CHANGELOG.zh.md",
+      "THIRD_PARTY.md": "THIRD_PARTY.md",
+      "docs/spec.md": "spec.md",
+      "docs/design.md": "design.md",
+      "docs/roadmap.md": "roadmap.md",
+      "docs/legal.md": "legal.md",
+      "docs/website.md": "website.md",
+      "docs/process.md": "process.md",
+      "docs/adr/README.md": "adr-index.md",
+      "design/README.md": "design-README.md",
+      "LICENSE": "LICENSE"
+    },
+    "website": {
+      "README.md": "website-README.md",
+      "AGENTS.md": "AGENTS.md",
+      "SECURITY.md": "SECURITY.md",
+      "CHANGELOG.md": "CHANGELOG.md",
+      "THIRD_PARTY.md": "THIRD_PARTY.md",
+      "docs/design.md": "website-design.md",
+      "docs/content.md": "content.md",
+      "docs/process.md": "process.md",
+      "docs/adr/README.md": "adr-index.md"
+    },
+    "library": {
+      "README.md": "library-README.md",
+      "AGENTS.md": "AGENTS.md",
+      "CHANGELOG.md": "CHANGELOG.md",
+      "docs/design.md": "library-design.md",
+      "docs/adr/README.md": "adr-index.md"
+    },
+    "template": {
+      "README.md": "library-README.md",
+      "AGENTS.md": "AGENTS.md"
+    },
+    "org": {
+      "README.md": "org-README.md",
+      "AGENTS.md": "AGENTS.md"
+    }
+  },
+  "patterns": {
+    "docs/adr/NNNN-*.md": "adr.md",
+    "docs/milestones/v*.md": "milestone.md",
+    "docs/milestones/v*-security.md": "security-walkthrough.md"
+  },
+  "pointer_types": [
+    "app",
+    "website",
+    "library",
+    "template",
+    "org"
+  ]
+}

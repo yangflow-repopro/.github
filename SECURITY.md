@@ -2,12 +2,8 @@
 
 ## Reporting a vulnerability
 
-Please do not open a public issue. Email the product's support address with "Security" in the subject:
-
-| Product | Address |
-|---|---|
-| BareKeep | support@barekeep.com |
-| Loggia | support@useloggia.com |
+Please do not open a public issue. Email the product's support address (it is in the footer of the product's
+website and in the product repository's `SECURITY.md`) with "Security" in the subject.
 
 Include what you found, how to reproduce it and the app version and build. You will get an
 acknowledgement within 3 business days and a fix or a status update within 14 days. Please give us
