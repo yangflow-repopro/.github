@@ -1,0 +1,100 @@
+# Reusable CI for the organization's macOS apps. See handbook/code-standards.md, "CI".
+#
+# Caller (in <repo>/.github/workflows/ci.yml):
+#   jobs:
+#     ci:
+#       uses: yangflow-repopro/.github/.github/workflows/macos-ci.yml@main
+#       with:
+#         project: Loggia.xcodeproj
+#         scheme: Loggia
+#         lint-paths: Loggia LoggiaCore LoggiaTests
+#         run-compat: ${{ github.event_name == 'push' }}
+name: macOS CI
+
+on:
+  workflow_call:
+    inputs:
+      project:
+        description: Path of the .xcodeproj
+        required: true
+        type: string
+      scheme:
+        description: Scheme to build and test
+        required: true
+        type: string
+      lint-paths:
+        description: Space-separated directories for swift-format lint
+        required: true
+        type: string
+      test-args:
+        description: Extra arguments appended to xcodebuild test
+        required: false
+        type: string
+        default: ""
+      run-compat:
+        description: Also run the GitHub-hosted compatibility job (costly; callers enable it on push to main)
+        required: false
+        type: boolean
+        default: false
+      compat-xcode:
+        description: Xcode version selected on the macos-26 runner
+        required: false
+        type: string
+        default: "26.6"
+
+jobs:
+  main:
+    name: Self-hosted · xcodegen, format, build, test
+    runs-on: [self-hosted, macOS, xcode-27]
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Tool versions
+        run: xcodebuild -version && swift --version && xcodegen --version
+
+      - name: Project is up to date
+        run: |
+          xcodegen generate --quiet
+          git diff --exit-code -- '*.xcodeproj' || {
+            echo "::error::project.yml changed but the generated project was not committed; run xcodegen generate"; exit 1; }
+
+      - name: Format check
+        run: xcrun swift-format lint --strict --recursive --parallel ${{ inputs.lint-paths }}
+
+      - name: Build (Release)
+        run: |
+          set -o pipefail
+          xcodebuild build -project "${{ inputs.project }}" -scheme "${{ inputs.scheme }}" \
+            -configuration Release -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO
+
+      - name: Test
+        run: |
+          set -o pipefail
+          xcodebuild test -project "${{ inputs.project }}" -scheme "${{ inputs.scheme }}" \
+            -destination 'platform=macOS' -testLanguage en -testRegion US \
+            CODE_SIGNING_ALLOWED=NO ${{ inputs.test-args }}
+
+  compat:
+    name: macOS 26 · build, test (compatibility)
+    if: ${{ inputs.run-compat }}
+    runs-on: macos-26
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Select Xcode ${{ inputs.compat-xcode }}
+        run: sudo xcode-select -s "/Applications/Xcode_${{ inputs.compat-xcode }}.app" && xcodebuild -version
+
+      - name: Build (Release)
+        run: |
+          set -o pipefail
+          xcodebuild build -project "${{ inputs.project }}" -scheme "${{ inputs.scheme }}" \
+            -configuration Release -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO
+
+      - name: Test
+        run: |
+          set -o pipefail
+          xcodebuild test -project "${{ inputs.project }}" -scheme "${{ inputs.scheme }}" \
+            -destination 'platform=macOS' -testLanguage en -testRegion US \
+            CODE_SIGNING_ALLOWED=NO ${{ inputs.test-args }}

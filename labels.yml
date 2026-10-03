@@ -1,0 +1,45 @@
+# Shared labels for every repository in the organization. Apply with scripts/sync-labels.sh.
+# Type labels mirror commit types (handbook/process.md). Scope labels are per repository and are
+# never created or removed by the sync.
+- name: feat
+  color: "1D76DB"
+  description: New feature
+- name: fix
+  color: "D73A4A"
+  description: Bug fix
+- name: design
+  color: "C5DEF5"
+  description: Mockups, icons, design tokens
+- name: docs
+  color: "0075CA"
+  description: Documentation only
+- name: refactor
+  color: "FBCA04"
+  description: Behaviour-preserving change
+- name: test
+  color: "BFD4F2"
+  description: Tests only
+- name: perf
+  color: "F9D0C4"
+  description: Performance
+- name: build
+  color: "E4E669"
+  description: Project config, dependencies, signing
+- name: ci
+  color: "EDEDED"
+  description: CI configuration
+- name: chore
+  color: "FEF2C0"
+  description: Everything else
+- name: security
+  color: "B60205"
+  description: Needs a security walkthrough
+- name: milestone
+  color: "5319E7"
+  description: Tracking issue for a milestone
+- name: needs-decision
+  color: "E99695"
+  description: Waiting for the maintainer's call
+- name: unverified
+  color: "D4C5F9"
+  description: Technical assumption not yet measured

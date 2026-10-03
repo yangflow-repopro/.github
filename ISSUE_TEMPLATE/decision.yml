@@ -1,0 +1,21 @@
+name: Decision needed
+description: A question only the maintainer can answer
+labels: ["needs-decision"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+    validations:
+      required: true
+  - type: textarea
+    id: options
+    attributes:
+      label: Options and their cost
+      value: |
+        1. 
+        2. 
+  - type: textarea
+    id: recommendation
+    attributes:
+      label: Recommendation

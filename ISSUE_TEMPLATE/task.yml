@@ -1,0 +1,24 @@
+name: Task
+description: A unit of work under a milestone tracking issue
+body:
+  - type: input
+    id: parent
+    attributes:
+      label: Tracking issue
+      placeholder: "#12"
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What is in and what is out.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance
+      description: Checklist the PR must satisfy.
+      value: |
+        - [ ] 

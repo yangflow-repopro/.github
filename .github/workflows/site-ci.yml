@@ -1,0 +1,46 @@
+# Reusable CI for the organization's static websites. See handbook/website.md, "Checks".
+#
+# Caller (in <repo>/.github/workflows/ci.yml):
+#   jobs:
+#     ci:
+#       uses: yangflow-repopro/.github/.github/workflows/site-ci.yml@main
+name: Site CI
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        required: false
+        type: string
+        default: "3.x"
+
+jobs:
+  check:
+    name: i18n, build, diff, site, facts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - name: i18n consistency
+        run: python3 scripts/check_i18n.py
+
+      - name: Build
+        run: python3 scripts/build.py
+
+      - name: Committed output matches sources
+        run: |
+          git diff --exit-code -- public/ || {
+            echo "::error::public/ is stale; run scripts/build.py and commit the result"; exit 1; }
+
+      # Until every site vendors sitekit, run whichever checks the repository has.
+      - name: Site check
+        run: |
+          if [ -f scripts/check-site.py ]; then python3 scripts/check-site.py; else echo "no check-site.py"; fi
+
+      - name: Legal facts
+        run: python3 scripts/check_facts.py

@@ -1,0 +1,26 @@
+name: Bug
+description: Something does not behave as the spec or design says
+labels: ["fix"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: One or two sentences; attach a screenshot or recording for UI issues.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should happen
+      description: Quote the spec or design section if there is one.
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      render: markdown
+  - type: input
+    id: version
+    attributes:
+      label: App version and build, macOS version
+      placeholder: "1.0.0 (12) · macOS 26.1"
