@@ -74,8 +74,15 @@ def check_against(rel, template_name, text=None):
     want_marker, have_marker = marker(tmpl), marker(text)
     if have_marker != want_marker:
         err(rel, f"first line must be '<!-- template: {want_marker[0]} v{want_marker[1]} -->' (found {have_marker})")
-    if h_lines(tmpl, 2) != h_lines(text, 2):
-        err(rel, f"H2 sections differ from template {template_name}: expected {h_lines(tmpl, 2)}, found {h_lines(text, 2)}")
+    have = h_lines(text, 2)
+    if template_name.startswith("CHANGELOG"):
+        # Released versions follow Unreleased: "[X.Y.Z] - YYYY-MM-DD"
+        released = [h for h in have[1:] if re.fullmatch(r"\[\d+\.\d+\.\d+\] - \d{4}-\d{2}-\d{2}", h)]
+        if have[1:] != released:
+            err(rel, "sections after [Unreleased] must be '[X.Y.Z] - YYYY-MM-DD'")
+        have = have[:1]
+    if h_lines(tmpl, 2) != have:
+        err(rel, f"H2 sections differ from template {template_name}: expected {h_lines(tmpl, 2)}, found {have}")
 
 
 def main():
@@ -152,7 +159,7 @@ def main():
     allow = config.get("allow", [])
     ignore = config.get("ignore", [])
     skip_dirs = ("public/", "build/", ".build/", "scripts/sitekit/", ".docs-check.json")
-    forbidden = [re.compile(re.escape(n), re.I) for n in config.get("forbidden", [])]
+    forbidden = [re.compile(r"(?<![A-Za-z])" + re.escape(n) + r"(?![a-z])", re.I) for n in config.get("forbidden", [])]
     for rel, text in texts.items():
         if rel.startswith(skip_dirs) or rel.endswith(".xcodeproj/project.pbxproj"):
             continue
