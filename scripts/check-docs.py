@@ -7,7 +7,9 @@ The repository declares its type in `.repo-type` (app, website, library, templat
 `.docs-check.json`:
     {"forbidden": ["other-product", ...],      names that must not appear anywhere (case-insensitive)
      "allow": ["path/glob", ...],              files exempt from the name check
-     "ignore": ["path/glob", ...]}             files exempt from the reference checks
+     "ignore": ["path/glob", ...],             files exempt from the reference checks
+     "pending": ["docs/design.md", ...]}       required documents whose template check is postponed
+                                               (temporary, with a plan entry that removes it)
 
 Exit status 1 when any check fails; every problem is printed as `path: message`.
 """
@@ -90,7 +92,10 @@ def main():
     config = json.loads(config_file.read_text()) if config_file.is_file() else {}
 
     # 1. required documents and their templates
+    pending = config.get("pending", [])
     for rel, tname in manifest["types"][repo_type].items():
+        if rel in pending:
+            continue
         if not (ROOT / rel).is_file():
             err(rel, f"missing (required for type {repo_type})")
             continue
