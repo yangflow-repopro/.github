@@ -77,6 +77,8 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0  # the secret scan reads the whole history
 
       - name: Tool versions
         run: xcodebuild -version && swift --version
@@ -104,6 +106,10 @@ jobs:
       - name: Release script tests
         run: |
           if [ -x scripts/test-release.sh ]; then scripts/test-release.sh; fi
+
+      - name: Secret scan of the history
+        run: |
+          if [ -f scripts/scan_secrets.py ]; then python3 scripts/scan_secrets.py; fi
 
       - name: Build (Release)
         run: |
