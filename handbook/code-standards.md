@@ -71,6 +71,11 @@ Applies to every Swift app in the organization. Violations are bugs.
 - No XCUITest. UI quality relies on all-state previews, screenshots on every UI PR and the
   maintainer's manual acceptance.
 - Live integration tests are opt-in through environment variables and skipped in CI.
+- Tests that need real sockets, a local HTTP server or WebKit carry
+  `.enabled(if: !TestEnvironment.isCompatibilityRun)`: the compatibility job sets `COMPAT_RUN=1`
+  (`TEST_RUNNER_COMPAT_RUN` on the xcodebuild command) because the hosted macOS 26 image is unreliable
+  for them. The main job runs everything. Timing assertions leave headroom for a loaded machine: prove
+  "did not wait for the limit" with a generous limit, not with a tight wall-clock bound.
 
 ## CI
 

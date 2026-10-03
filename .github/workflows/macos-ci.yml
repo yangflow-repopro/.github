@@ -112,6 +112,11 @@ jobs:
             -configuration Release -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO
 
       - name: Test
+        # COMPAT_RUN=1 reaches the tests as an environment variable; suites that need real sockets or
+        # WebKit are disabled with it (handbook/code-standards.md, Tests). The hosted macOS 26 image is
+        # unreliable for them; the main job still runs everything.
+        env:
+          TEST_RUNNER_COMPAT_RUN: "1"
         run: |
           set -o pipefail
           xcodebuild test -project "${{ inputs.project }}" -scheme "${{ inputs.scheme }}" \
