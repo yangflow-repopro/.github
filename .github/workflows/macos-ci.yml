@@ -105,6 +105,10 @@ jobs:
           done
           exit 1
 
+      - name: Release script tests
+        run: |
+          if [ -x scripts/test-release.sh ]; then scripts/test-release.sh; fi
+
       - name: Build (Release)
         run: |
           set -o pipefail
