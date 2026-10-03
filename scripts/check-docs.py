@@ -167,7 +167,7 @@ def main():
         for m in re.finditer(r"§\s?\d|\bscenes?\s+\d|\bADR-\d+|(?<![\w.])M\d\b(?![\w-])", text):
             line = text[: m.start()].count("\n") + 1
             err(f"{rel}:{line}", f"numbered reference {m.group(0)!r}: link a stable anchor (docs/spec.md#slug), ADR file or screen instead")
-        if rel.endswith(".md"):
+        if True:
             for m in re.finditer(r"(?<![\w/.-])((?:docs|design)/[\w./-]*[\w-]\.(?:md|html))(#[\w-]+)?", text):
                 target = ROOT / m.group(1)
                 line = text[: m.start()].count("\n") + 1
