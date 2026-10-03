@@ -148,6 +148,20 @@ def main():
             else:
                 err(rel, "milestone files are v<X.Y>.md, v<X.Y>-security.md or next.md")
 
+    # 3b. third-party table versus the resolved Swift packages
+    third = ROOT / "THIRD_PARTY.md"
+    resolved = [f for f in subprocess.run(["git", "-C", str(ROOT), "ls-files", "*Package.resolved"], capture_output=True, text=True).stdout.split("\n") if f]
+    if third.is_file() and resolved:
+        rows = [[c.strip() for c in line.strip().strip("|").split("|")] for line in third.read_text().split("\n") if line.startswith("|")]
+        for f in resolved:
+            for pin in json.loads((ROOT / f).read_text()).get("pins", []):
+                ident, version = pin["identity"], pin.get("state", {}).get("version")
+                row = next((r for r in rows if ident in r[0].lower()), None)
+                if row is None:
+                    err("THIRD_PARTY.md", f"{ident} is in {f} but has no row")
+                elif version and version not in row[1]:
+                    err("THIRD_PARTY.md", f"{ident} is {version} in {f} but the row says {row[1]!r}")
+
     # 4. text scans: other products' names, ordinal references, references that must resolve
     files = [Path(f) for f in subprocess.run(["git", "-C", str(ROOT), "ls-files"], capture_output=True, text=True).stdout.split("\n") if f]
     texts = {}
