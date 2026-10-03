@@ -15,8 +15,10 @@ Applies to every Swift app in the organization. Violations are bugs.
 
 ## Concurrency
 
-- The app target is `MainActor`-isolated by default (`SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`); the
-  Core package sets `defaultIsolation(MainActor.self)`.
+- The app target is `MainActor`-isolated by default (`SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`). The Core
+  package sets `defaultIsolation(MainActor.self)` when it is mostly main-actor services; a Core that is
+  mostly `Sendable` value types and background engines (Loggia) leaves the default and annotates
+  `@MainActor` explicitly. Record the choice in an ADR.
 - Domain value types are `nonisolated` so engines can read them from any execution domain.
 - A MainActor-isolated protocol cannot be implemented by an actor; test doubles are `final class`.
 - Multi-step remote operations are idempotent; each flow is tested for success, mid-way failure and

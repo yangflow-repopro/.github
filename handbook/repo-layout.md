@@ -38,6 +38,9 @@ CHANGELOG.md  CHANGELOG.zh.md  LICENSE (terms of service)  THIRD_PARTY.md  SECUR
 ## Rules
 
 - After changing `project.yml`, run `xcodegen generate` and commit the regenerated project with it.
+- Core package API is `public`. A Core type the app constructs needs an explicit `public init` (the synthesized
+  memberwise initializer is internal). Keep `lint-paths` in `ci.yml` and any source-scanning test in step
+  with the directories.
 - Bundle identifiers follow the product domain: `com.<product-domain>.app`, tests `.tests`.
 - `AGENTS.md` is the tool-neutral brief for AI collaborators: what the project is, directory boundaries,
   common commands, project-specific rules and red lines. It links to this handbook instead of repeating it.
