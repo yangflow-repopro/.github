@@ -8,30 +8,39 @@ Every app repository has the same shape so that tooling, CI and people can move 
   UI/                      One directory per screen; views depend only on models
   Resources/               Localizable.xcstrings, Assets.xcassets, <Name>.icon, ThirdPartyLicenses/
 <Name>Core/                Local SwiftPM package
-  Package.swift            defaultIsolation(MainActor.self); no third-party dependencies
+  Package.swift            no third-party dependencies; default MainActor isolation per ADR (see code-standards.md)
   Sources/<Name>Core/
     Domain/                nonisolated value types
     Services/              protocols + Live implementations (API clients, stores, engines, redactor, log)
     Design/                DesignTokens and shared design primitives
-  Sources/<Name>CoreTestSupport/   Mock and in-memory implementations (tests and DEBUG previews only)
+                           Mock, in-memory and preview-only types: inside #if DEBUG (never in Release)
 <Name>Tests/               Swift Testing; @testable import of both modules
 Config/
   Version.xcconfig         MARKETING_VERSION and CURRENT_PROJECT_VERSION; the only place they are written
   <Name>-Info.plist        Keys Xcode cannot generate (Sparkle feed, ATS exceptions)
 project.yml                XcodeGen definition; references Config/Version.xcconfig
 <Name>.xcodeproj           Generated; committed; CI checks it is up to date
-design/                    High-fidelity mockups (HTML), icon source, exported icon layers, screenshots
+design/
+  README.md                Viewing · Screens (screen x state x light/dark) · Decision log · Maintenance
+  tokens.html              Colors, type, spacing, radii, materials, motion; mirrors docs/design.md and the Core tokens
+  screens/<screen>.html    One file per screen, named like UI/<Screen>/; states switched with ?state=...
+  icon/                    icon.html, <name>-icon.js, export-icons.mjs, layers/
+  screenshots/<screen>/{light,dark}.png   Exported from a Mac at acceptance
 docs/
   spec.md  design.md  process.md (deltas only)  roadmap.md
   adr/README.md + NNNN-title.md
-  milestones/<name>.md
+  milestones/v<X.Y>.md  v<X.Y>-security.md  next.md
+  legal.md  website.md
 scripts/
   bump.sh  release.sh  release-credentials.sh  test-release.sh
   scan_secrets.py  website-changelog.py  ax-audit.swift  export-website-shots.sh
 .github/workflows/ci.yml   Calls the shared macos-ci.yml
 .github/workflows/release.yml  Calls the shared macos-release.yml on tags
 .swift-format  .gitignore  .editorconfig
-README.md  AGENTS.md  CLAUDE.md (contains only `@AGENTS.md`)
+README.md  AGENTS.md
+CLAUDE.md  GEMINI.md  .github/copilot-instructions.md   (each contains only `@AGENTS.md`)
+.repo-type  .docs-check.json   (repository type for check-docs; names that must not appear)
+.claude/settings.json  .codex/config.toml   (swift-format hook; narrow permission allowlist)
 CHANGELOG.md  CHANGELOG.zh.md  LICENSE (terms of service)  THIRD_PARTY.md  SECURITY.md (points here)
 ```
 
