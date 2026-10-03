@@ -78,7 +78,7 @@ Every PR runs the shared `macos-ci.yml` reusable workflow:
 
 | Job | Runner | Does |
 |---|---|---|
-| main | self-hosted Mac, current Xcode | `xcodegen generate` + no diff · `swift-format lint --strict` · build (Release) · test |
+| main | GitHub-hosted `xcode-27` (or the organization's self-hosted Mac via `main-runner`) | `xcodegen generate` + no diff · `swift-format lint --strict` · build (Release) · test |
 | compat | GitHub-hosted `macos-26`, previous Xcode | build (Release) · test; runs on push to `main` only |
 
 The compatibility job exists to catch APIs that are newer than the deployment target.

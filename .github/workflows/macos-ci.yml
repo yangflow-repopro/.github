@@ -41,11 +41,18 @@ on:
         required: false
         type: string
         default: "26.6"
+      main-runner:
+        description: >-
+          runs-on for the main job as a JSON array. Default is GitHub's hosted current-Xcode runner;
+          pass '["self-hosted","macOS","xcode-27"]' to use the organization's own Mac.
+        required: false
+        type: string
+        default: '["xcode-27"]'
 
 jobs:
   main:
-    name: Self-hosted · xcodegen, format, build, test
-    runs-on: [self-hosted, macOS, xcode-27]
+    name: Current Xcode · xcodegen, format, build, test
+    runs-on: ${{ fromJSON(inputs.main-runner) }}
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v5
