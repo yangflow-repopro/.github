@@ -1,0 +1,154 @@
+# Reusable release for the organization's macOS apps (handbook/release.md). NOT yet exercised: it needs the
+# `release` environment secrets listed below; run it first against a test bucket.
+#
+# Caller (in <repo>/.github/workflows/release.yml):
+#   on:
+#     push:
+#       tags: ["v*"]
+#   jobs:
+#     release:
+#       uses: yangflow-repopro/.github/.github/workflows/macos-release.yml@main
+#       with:
+#         project: Loggia.xcodeproj
+#         scheme: Loggia
+#         sparkle-account: loggia
+#       secrets: inherit
+#
+# Secrets (organization, environment `release`):
+#   DEVELOPER_ID_P12_BASE64, DEVELOPER_ID_P12_PASSWORD   Developer ID Application certificate
+#   NOTARY_KEY_P8_BASE64, NOTARY_KEY_ID, NOTARY_ISSUER_ID  App Store Connect API key for notarytool
+#   SPARKLE_PRIVATE_KEY                                    EdDSA key exported with generate_keys -x
+#   R2_ENDPOINT, R2_BUCKET, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY
+# Everything lives in a temporary keychain that is deleted when the job ends.
+name: macOS release
+
+on:
+  workflow_call:
+    inputs:
+      project:
+        required: true
+        type: string
+      scheme:
+        required: true
+        type: string
+      sparkle-account:
+        description: Keychain account name release.sh uses for the Sparkle key (barekeep, loggia)
+        required: true
+        type: string
+      publish:
+        description: Upload to R2 and publish appcast/latest.json (false = build, sign and notarize only)
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  release:
+    name: Build, notarize, publish
+    runs-on: xcode-27
+    environment: release
+    timeout-minutes: 90
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: The tag matches Config/Version.xcconfig
+        run: |
+          version="$(awk -F' = ' '/^MARKETING_VERSION =/ { print $2 }' Config/Version.xcconfig)"
+          [ "v$version" = "${GITHUB_REF_NAME}" ] || { echo "::error::tag ${GITHUB_REF_NAME} but Config/Version.xcconfig says $version"; exit 1; }
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+
+      - name: Temporary keychain with the signing certificate
+        env:
+          P12: ${{ secrets.DEVELOPER_ID_P12_BASE64 }}
+          P12_PASSWORD: ${{ secrets.DEVELOPER_ID_P12_PASSWORD }}
+        run: |
+          keychain="$RUNNER_TEMP/release.keychain-db"; password="$(uuidgen)"
+          security create-keychain -p "$password" "$keychain"
+          security set-keychain-settings -lut 21600 "$keychain"
+          security unlock-keychain -p "$password" "$keychain"
+          security list-keychains -d user -s "$keychain" $(security list-keychains -d user | tr -d '"')
+          security default-keychain -s "$keychain"
+          echo "$P12" | base64 --decode > "$RUNNER_TEMP/cert.p12"
+          security import "$RUNNER_TEMP/cert.p12" -k "$keychain" -P "$P12_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$password" "$keychain" > /dev/null
+          rm -f "$RUNNER_TEMP/cert.p12"
+          echo "KEYCHAIN=$keychain" >> "$GITHUB_ENV"
+          identity="$(security find-identity -v -p codesigning "$keychain" | sed -n 's/.*"\(Developer ID Application:.*\)"/\1/p' | head -1)"
+          [ -n "$identity" ] || { echo "::error::no Developer ID Application identity in the certificate"; exit 1; }
+          echo "SIGN_IDENTITY=$identity" >> "$GITHUB_ENV"
+
+      - name: Notarization profile
+        env:
+          KEY: ${{ secrets.NOTARY_KEY_P8_BASE64 }}
+          KEY_ID: ${{ secrets.NOTARY_KEY_ID }}
+          ISSUER: ${{ secrets.NOTARY_ISSUER_ID }}
+        run: |
+          echo "$KEY" | base64 --decode > "$RUNNER_TEMP/AuthKey.p8"
+          xcrun notarytool store-credentials release-notary --key "$RUNNER_TEMP/AuthKey.p8" --key-id "$KEY_ID" --issuer "$ISSUER"
+          rm -f "$RUNNER_TEMP/AuthKey.p8"
+          echo "NOTARY_PROFILE=release-notary" >> "$GITHUB_ENV"
+
+      - name: Resolve packages and import the Sparkle key
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+          ACCOUNT: ${{ inputs.sparkle-account }}
+        run: |
+          for attempt in 1 2 3; do
+            xcodebuild -resolvePackageDependencies -project "${{ inputs.project }}" -scheme "${{ inputs.scheme }}" && break
+            sleep 20
+          done
+          bin="$(find ~/Library/Developer/Xcode/DerivedData -type d -path '*artifacts/sparkle/Sparkle/bin' | head -1)"
+          [ -n "$bin" ] || { echo "::error::Sparkle tools not found after resolving packages"; exit 1; }
+          echo "$SPARKLE_PRIVATE_KEY" > "$RUNNER_TEMP/sparkle.key"
+          "$bin/generate_keys" --account "$ACCOUNT" -f "$RUNNER_TEMP/sparkle.key"
+          rm -f "$RUNNER_TEMP/sparkle.key"
+          echo "SPARKLE_BIN=$bin" >> "$GITHUB_ENV"
+
+      - name: Dry run
+        run: scripts/release.sh --check
+        env:
+          SPARKLE_ACCOUNT: ${{ inputs.sparkle-account }}
+          SPARKLE_KEY_ACCOUNT: ${{ inputs.sparkle-account }}
+
+      - name: Build, notarize and publish
+        env:
+          SPARKLE_ACCOUNT: ${{ inputs.sparkle-account }}
+          SPARKLE_KEY_ACCOUNT: ${{ inputs.sparkle-account }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: |
+          if [ "${{ inputs.publish }}" = "true" ]; then scripts/release.sh --publish; else scripts/release.sh; fi
+
+      - name: Installer as a workflow artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: installer
+          path: |
+            build/release/*.dmg
+            build/release/*.sha256
+
+      - name: GitHub Release with the changelog section
+        if: ${{ inputs.publish }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - "$VERSION" > "$RUNNER_TEMP/notes.md" <<'PY'
+          import re, sys
+          version = sys.argv[1]
+          text = open("CHANGELOG.md", encoding="utf-8").read()
+          m = re.search(rf"^## \[?{re.escape(version)}\]?.*?\n(.*?)(?=^## |^\[|\Z)", text, re.S | re.M)
+          if not m:
+              sys.exit(f"CHANGELOG.md has no section for {version}")
+          print(m.group(1).strip())
+          PY
+          gh release create "${GITHUB_REF_NAME}" --title "${GITHUB_REF_NAME}" --notes-file "$RUNNER_TEMP/notes.md" build/release/*.dmg
+
+      - name: Delete the temporary keychain
+        if: ${{ always() }}
+        run: |
+          [ -n "${KEYCHAIN:-}" ] && security delete-keychain "$KEYCHAIN" || true
