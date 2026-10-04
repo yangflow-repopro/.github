@@ -8,7 +8,8 @@ maintainer's accounts. It has no UI of its own and is not distributed to users. 
 
 ## Stacks
 
-`handbook/stacks/typescript.md` for the packages and the command-line tool.
+`handbook/stacks/typescript.md` for the packages and the command-line tool; `handbook/stacks/python.md` for the scripts
+(the secret scan).
 
 ## Pages
 
