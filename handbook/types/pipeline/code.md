@@ -63,7 +63,9 @@ Every PR runs the shared `pipeline-ci.yml` reusable workflow on a GitHub-hosted 
 
 | Job | Does |
 |---|---|
-| check | the TypeScript stack's CI steps · `check-docs.py` · `scan_secrets.py` |
+| check | the TypeScript stack's CI steps · the repository's `scripts/scan_secrets.py` over the whole history |
+
+Documents are checked by `docs-check.yml`, which the repository's `docs.yml` calls.
 
 Workflows declare `permissions: contents: read` and raise it per job; third-party actions are pinned by commit. The
 workflow is added to this repository together with the first `pipeline` code and is tested from that repository's
