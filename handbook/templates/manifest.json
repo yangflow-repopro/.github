@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "pointers": [
     "CLAUDE.md",
     "GEMINI.md",
@@ -7,59 +7,108 @@
   ],
   "types": {
     "app": {
-      "README.md": "README.md",
-      "AGENTS.md": "AGENTS.md",
-      "SECURITY.md": "SECURITY.md",
-      "CHANGELOG.md": "CHANGELOG.md",
-      "CHANGELOG.zh.md": "CHANGELOG.zh.md",
-      "THIRD_PARTY.md": "THIRD_PARTY.md",
-      "docs/spec.md": "spec.md",
-      "docs/design.md": "design.md",
-      "docs/roadmap.md": "roadmap.md",
-      "docs/legal.md": "legal.md",
-      "docs/website.md": "website.md",
-      "docs/process.md": "process.md",
-      "docs/adr/README.md": "adr-index.md",
-      "design/README.md": "design-README.md",
-      "LICENSE": "LICENSE"
+      "stacks": [
+        "swift",
+        "python"
+      ],
+      "documents": {
+        "README.md": "app/README.md",
+        "AGENTS.md": "common/AGENTS.md",
+        "SECURITY.md": "common/SECURITY.md",
+        "CHANGELOG.md": "common/CHANGELOG.md",
+        "CHANGELOG.zh.md": "common/CHANGELOG.zh.md",
+        "THIRD_PARTY.md": "app/THIRD_PARTY.md",
+        "docs/spec.md": "common/spec.md",
+        "docs/design.md": "app/design.md",
+        "docs/roadmap.md": "common/roadmap.md",
+        "docs/legal.md": "common/legal.md",
+        "docs/website.md": "common/website.md",
+        "docs/process.md": "common/process.md",
+        "docs/adr/README.md": "common/adr-index.md",
+        "design/README.md": "common/design-README.md",
+        "LICENSE": "app/LICENSE"
+      },
+      "milestone": "common/milestone.md"
+    },
+    "selfhosted": {
+      "stacks": [
+        "typescript",
+        "swift",
+        "python"
+      ],
+      "documents": {
+        "README.md": "selfhosted/README.md",
+        "AGENTS.md": "common/AGENTS.md",
+        "SECURITY.md": "common/SECURITY.md",
+        "CHANGELOG.md": "common/CHANGELOG.md",
+        "CHANGELOG.zh.md": "common/CHANGELOG.zh.md",
+        "THIRD_PARTY.md": "selfhosted/THIRD_PARTY.md",
+        "docs/spec.md": "common/spec.md",
+        "docs/design.md": "selfhosted/design.md",
+        "docs/hosting.md": "selfhosted/hosting.md",
+        "docs/threat-model.md": "selfhosted/threat-model.md",
+        "docs/roadmap.md": "common/roadmap.md",
+        "docs/legal.md": "common/legal.md",
+        "docs/website.md": "common/website.md",
+        "docs/process.md": "common/process.md",
+        "docs/adr/README.md": "common/adr-index.md",
+        "design/README.md": "common/design-README.md",
+        "LICENSE": "selfhosted/LICENSE"
+      },
+      "milestone": "selfhosted/milestone.md"
     },
     "website": {
-      "README.md": "website-README.md",
-      "AGENTS.md": "AGENTS.md",
-      "SECURITY.md": "SECURITY.md",
-      "CHANGELOG.md": "CHANGELOG.md",
-      "THIRD_PARTY.md": "THIRD_PARTY.md",
-      "docs/design.md": "website-design.md",
-      "docs/content.md": "content.md",
-      "docs/process.md": "process.md",
-      "docs/adr/README.md": "adr-index.md"
+      "stacks": [
+        "python"
+      ],
+      "documents": {
+        "README.md": "website/README.md",
+        "AGENTS.md": "common/AGENTS.md",
+        "SECURITY.md": "common/SECURITY.md",
+        "CHANGELOG.md": "common/CHANGELOG.md",
+        "THIRD_PARTY.md": "website/THIRD_PARTY.md",
+        "docs/design.md": "website/design.md",
+        "docs/content.md": "website/content.md",
+        "docs/process.md": "common/process.md",
+        "docs/adr/README.md": "common/adr-index.md"
+      },
+      "milestone": "common/milestone.md"
     },
     "library": {
-      "README.md": "library-README.md",
-      "AGENTS.md": "AGENTS.md",
-      "CHANGELOG.md": "CHANGELOG.md",
-      "docs/design.md": "library-design.md",
-      "docs/adr/README.md": "adr-index.md"
+      "stacks": [],
+      "documents": {
+        "README.md": "library/README.md",
+        "AGENTS.md": "common/AGENTS.md",
+        "CHANGELOG.md": "common/CHANGELOG.md",
+        "docs/design.md": "library/design.md",
+        "docs/adr/README.md": "common/adr-index.md"
+      },
+      "milestone": "common/milestone.md"
     },
     "template": {
-      "README.md": "library-README.md",
-      "AGENTS.md": "AGENTS.md"
+      "stacks": [
+        "swift",
+        "python"
+      ],
+      "documents": {
+        "README.md": "template/README.md",
+        "AGENTS.md": "common/AGENTS.md"
+      },
+      "milestone": "common/milestone.md"
     },
     "org": {
-      "README.md": "org-README.md",
-      "AGENTS.md": "AGENTS.md"
+      "stacks": [
+        "python"
+      ],
+      "documents": {
+        "README.md": "org/README.md",
+        "AGENTS.md": "common/AGENTS.md"
+      },
+      "milestone": "common/milestone.md"
     }
   },
   "patterns": {
-    "docs/adr/NNNN-*.md": "adr.md",
-    "docs/milestones/v*.md": "milestone.md",
-    "docs/milestones/v*-security.md": "security-walkthrough.md"
-  },
-  "pointer_types": [
-    "app",
-    "website",
-    "library",
-    "template",
-    "org"
-  ]
+    "docs/adr/NNNN-*.md": "common/adr.md",
+    "docs/milestones/v*-security.md": "common/security-walkthrough.md"
+  }
 }

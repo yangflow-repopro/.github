@@ -3,14 +3,15 @@
 
     python3 check-docs.py [repo-root]
 
-The repository declares its type in `.repo-type` (app, website, library, template, org). Optional
+The repository declares its type in `.repo-type` (app, selfhosted, website, library, template, org). Optional
 `.docs-check.json`:
     {"forbidden": ["other-product", ...],      names that must not appear anywhere (case-insensitive)
      "allow": ["path/glob", ...],              files exempt from the name check
      "ignore": ["path/glob", ...],             files exempt from the reference checks
      "external": ["docs/legal.md", ...],        paths that live in another repository (e.g. the app's)
-     "pending": ["docs/design.md", ...],       required documents whose template check is postponed
-                                               (temporary, with a plan entry that removes it)
+     "pending": ["docs/design.md", ...],       required documents not written yet: no template check, and
+                                               references to them are allowed (temporary, with a plan entry
+                                               that removes it)
      "design_icons": ["icon.html", ...]}       extra top-level entries allowed in design/ (icon sources)
 
 When design/README.md carries the `design-README.md v2` marker the ledger checks run (handbook/ui-workflow.md):
@@ -20,7 +21,8 @@ Repositories still on v1 are not ledger-checked until they migrate.
 Pull request checks run when PR_BASE is set (the base branch ref, e.g. origin/main) together with
 PR_TITLE and PR_LABELS (comma separated):
   - a `feat` or `fix` PR that changes product code must change CHANGELOG.md (label `no-changelog` exempts)
-  - when design/screens/ exists, a change under a UI/<Screen>/ directory must change design/screens/
+  - when design/screens/ exists, a change to screen code (UI/<Screen>/; for selfhosted also web/src/screens/<screen>/)
+    must change design/screens/
     (label `design-unchanged` exempts)
 
 Exit status 1 when any check fails; every problem is printed as `path: message`.
@@ -33,7 +35,10 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-TEMPLATES = HERE.parent / "handbook/templates"
+HANDBOOK = HERE.parent / "handbook"
+TEMPLATES = HANDBOOK / "templates"
+# A reference to a handbook file (handbook/<path>.md|json) in any document, comment or script of any repository.
+HANDBOOK_REF = re.compile(r"(?<![\w.-])handbook/([\w./<>-]*[\w>-]\.(?:md|json))")
 ROOT = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path.cwd()
 errors = []
 
@@ -75,21 +80,22 @@ def check_against(rel, template_name, text=None):
     path = ROOT / rel
     text = path.read_text(encoding="utf-8") if text is None else text
     tmpl = (TEMPLATES / template_name).read_text(encoding="utf-8")
-    if template_name == "LICENSE":
+    if template_name.endswith("LICENSE"):
         want = re.findall(r"^\d+\. (.+)$", tmpl, re.M)
         have = re.findall(r"^\d+\. (.+)$", text, re.M)
         if want != have:
-            err(rel, f"sections differ from the LICENSE template: expected {want}, found {have}")
-        if "(template: LICENSE v1)" not in text.split("\n")[0]:
-            err(rel, "first line must carry '(template: LICENSE v1)'")
+            err(rel, f"sections differ from the {template_name} template: expected {want}, found {have}")
+        tag = re.search(r"\(template: \S+ v\d+\)", tmpl.split("\n")[0]).group(0)
+        if tag not in text.split("\n")[0]:
+            err(rel, f"first line must carry '{tag}'")
         return
     want_marker, have_marker = marker(tmpl), marker(text)
-    if template_name == "design-README.md" and have_marker == (want_marker[0], 1):
+    if template_name == "common/design-README.md" and have_marker == (want_marker[0], 1):
         have_marker = want_marker  # v1 stays valid until the repository migrates (same H2 sections)
     if have_marker != want_marker:
         err(rel, f"first line must be '<!-- template: {want_marker[0]} v{want_marker[1]} -->' (found {have_marker})")
     have = h_lines(text, 2)
-    if template_name.startswith("CHANGELOG"):
+    if Path(template_name).name.startswith("CHANGELOG"):
         # Released versions follow Unreleased: "[X.Y.Z] - YYYY-MM-DD"
         released = [h for h in have[1:] if re.fullmatch(r"\[\d+\.\d+\.\d+\] - \d{4}-\d{2}-\d{2}", h)]
         if have[1:] != released:
@@ -99,6 +105,13 @@ def check_against(rel, template_name, text=None):
         err(rel, f"H2 sections differ from template {template_name}: expected {h_lines(tmpl, 2)}, found {have}")
 
 
+TEXT_SUFFIXES = {".md", ".swift", ".py", ".sh", ".yml", ".yaml", ".html", ".js", ".json", ".mjs", ".plist", ".txt",
+                 ".xcstrings", ".ts", ".tsx", ".mts", ".css"}
+# Where a repository type keeps screen code (handbook/ui-workflow.md); a change there must change design/screens/.
+SCREEN_CODE = {
+    "selfhosted": r"^web/src/screens/[^/]+/.+\.(?:ts|tsx|css)$|(^|/)UI/[^/]+/.+\.swift$",
+}
+DEFAULT_SCREEN_CODE = r"(^|/)UI/[^/]+/.+\.swift$"
 LEDGER_COLUMNS = ["screen", "spec", "design file", "code dir", "status", "signed off", "accepted"]
 STATUSES = ["planned", "proposed", "signed-off", "in-review", "accepted"]
 DESIGN_FIXED = {"README.md", "tokens.html", "check-tokens.py", "screens", "screenshots", ".DS_Store", "__pycache__"}
@@ -200,7 +213,7 @@ def check_ledger(config):
 def main():
     type_file = ROOT / ".repo-type"
     if not type_file.is_file():
-        err(".repo-type", "missing: declare app, website, library, template or org")
+        err(".repo-type", "missing: declare one of " + ", ".join(json.loads((TEMPLATES / "manifest.json").read_text())["types"]))
         return
     repo_type = type_file.read_text().strip()
     manifest = json.loads((TEMPLATES / "manifest.json").read_text())
@@ -212,7 +225,7 @@ def main():
 
     # 1. required documents and their templates
     pending = config.get("pending", [])
-    for rel, tname in manifest["types"][repo_type].items():
+    for rel, tname in manifest["types"][repo_type]["documents"].items():
         if rel in pending:
             continue
         if not (ROOT / rel).is_file():
@@ -239,7 +252,7 @@ def main():
             err(rel, "ADR file names are NNNN-lowercase-title.md")
             continue
         text = p.read_text(encoding="utf-8")
-        check_against(rel, "adr.md", text)
+        check_against(rel, manifest["patterns"]["docs/adr/NNNN-*.md"], text)
         h1 = h_lines(text, 1)
         if not h1 or not h1[0].startswith(m.group(1) + " "):
             err(rel, f"H1 must be '# {m.group(1)} <Title>'")
@@ -255,9 +268,9 @@ def main():
         for p in sorted(ms_dir.glob("*.md")):
             rel = str(p.relative_to(ROOT))
             if re.fullmatch(r"v\d+\.\d+-security\.md", p.name):
-                check_against(rel, "security-walkthrough.md")
+                check_against(rel, manifest["patterns"]["docs/milestones/v*-security.md"])
             elif re.fullmatch(r"v\d+\.\d+\.md|next\.md", p.name):
-                check_against(rel, "milestone.md")
+                check_against(rel, manifest["types"][repo_type]["milestone"])
             else:
                 err(rel, "milestone files are v<X.Y>.md, v<X.Y>-security.md or next.md")
 
@@ -275,11 +288,30 @@ def main():
                 elif version and version not in row[1]:
                     err("THIRD_PARTY.md", f"{ident} is {version} in {f} but the row says {row[1]!r}")
 
+    # 3c. third-party table versus package.json (exact versions only)
+    manifests = [f for f in subprocess.run(["git", "-C", str(ROOT), "ls-files", "package.json", "*/package.json"], capture_output=True, text=True).stdout.split("\n") if f]
+    if manifests:
+        rows = [[c.strip().strip("`") for c in line.strip().strip("|").split("|")] for line in third.read_text().split("\n") if line.startswith("|")] if third.is_file() else []
+        for f in manifests:
+            pkg = json.loads((ROOT / f).read_text())
+            for section in ("dependencies", "devDependencies", "optionalDependencies"):
+                for name, spec in pkg.get(section, {}).items():
+                    if spec.startswith("workspace:"):
+                        continue
+                    if not re.fullmatch(r"\d+\.\d+\.\d+(?:-[\w.]+)?", spec):
+                        err(f, f"{name}: {spec!r} is not an exact version")
+                        continue
+                    row = next((r for r in rows if r[0].lower() == name.lower()), None)
+                    if row is None:
+                        err("THIRD_PARTY.md", f"{name} is in {f} but has no row")
+                    elif spec not in row[1]:
+                        err("THIRD_PARTY.md", f"{name} is {spec} in {f} but the row says {row[1]!r}")
+
     # 4. text scans: other products' names, ordinal references, references that must resolve
     files = [Path(f) for f in subprocess.run(["git", "-C", str(ROOT), "ls-files"], capture_output=True, text=True).stdout.split("\n") if f]
     texts = {}
     for rel in files:
-        if rel.suffix in {".md", ".swift", ".py", ".sh", ".yml", ".yaml", ".html", ".js", ".json", ".mjs", ".plist", ".txt", ".xcstrings"} or rel.name == "LICENSE":
+        if rel.suffix in TEXT_SUFFIXES or rel.name in {"LICENSE", "Dockerfile"}:
             try:
                 texts[str(rel)] = (ROOT / rel).read_text(encoding="utf-8")
             except (UnicodeDecodeError, FileNotFoundError):
@@ -297,6 +329,16 @@ def main():
                 if m:
                     line = text[: m.start()].count("\n") + 1
                     err(f"{rel}:{line}", f"mentions {m.group(0)!r}: documents and code describe this product only")
+        for m in HANDBOOK_REF.finditer(text):
+            if "<" not in m.group(1) and not (HANDBOOK / m.group(1)).exists():
+                line = text[: m.start()].count("\n") + 1
+                err(f"{rel}:{line}", f"reference to handbook/{m.group(1)}, which does not exist in the organization handbook")
+        if repo_type == "org" and rel.startswith("handbook/") and not rel.startswith("handbook/templates/") and rel.endswith(".md"):
+            for m in re.finditer(r"\]\(([^)#\s]+)(?:#[^)]*)?\)", text):
+                target = m.group(1)
+                if not re.match(r"[a-z]+:", target) and not ((ROOT / rel).parent / target).exists():
+                    line = text[: m.start()].count("\n") + 1
+                    err(f"{rel}:{line}", f"link to {target}, which does not exist")
         if any(fnmatch.fnmatch(rel, g) for g in ignore) or rel.startswith("CHANGELOG"):
             continue
         lines = text.split("\n")
@@ -309,8 +351,8 @@ def main():
             for m in re.finditer(r"(?<![\w/.-])((?:docs|design)/[\w./-]*[\w-]\.(?:md|html))(#[\w-]+)?", text):
                 target = ROOT / m.group(1)
                 line = text[: m.start()].count("\n") + 1
-                if m.group(1) in config.get("external", []) and not target.is_file():
-                    continue
+                if m.group(1) in config.get("external", []) + pending and not target.is_file():
+                    continue  # lives in another repository, or is a required document not written yet
                 if not target.is_file():
                     err(f"{rel}:{line}", f"reference to missing file {m.group(1)}")
                 elif m.group(2) and m.group(2)[1:] not in anchors(target.read_text(encoding="utf-8")):
@@ -326,11 +368,14 @@ def pr_checks():
     labels = {l.strip() for l in os.environ.get("PR_LABELS", "").split(",") if l.strip()}
     changed = subprocess.run(["git", "-C", str(ROOT), "diff", "--name-only", f"{base}...HEAD"], capture_output=True, text=True).stdout.split()
     code = [f for f in changed if not f.startswith(("docs/", "scripts/", ".github/", "design/", ".claude/", ".codex/")) and "Tests/" not in f
+            and "/test/" not in f and ".test." not in f
             and not f.endswith((".md", ".json", ".xcodeproj/project.pbxproj", ".yml"))]
     if re.match(r"(feat|fix)(\(|:|!)", title) and code and "no-changelog" not in labels and "CHANGELOG.md" not in changed:
         err("CHANGELOG.md", "a feat/fix PR that changes product code must add a line under [Unreleased] (or label the PR no-changelog)")
     if (ROOT / "design/screens").is_dir() and "design-unchanged" not in labels:
-        ui = [f for f in changed if re.search(r"(^|/)UI/[^/]+/", f) and f.endswith(".swift")]
+        type_file = ROOT / ".repo-type"
+        repo_type = type_file.read_text().strip() if type_file.is_file() else ""
+        ui = [f for f in changed if re.search(SCREEN_CODE.get(repo_type, DEFAULT_SCREEN_CODE), f)]
         if ui and not any(f.startswith("design/screens/") for f in changed):
             err("design/screens", f"UI code changed ({ui[0]}...) without a change under design/screens/ (or label the PR design-unchanged)")
 

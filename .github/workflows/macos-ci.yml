@@ -1,4 +1,4 @@
-# Reusable CI for the organization's macOS apps. See handbook/code-standards.md, "CI".
+# Reusable CI for the organization's macOS apps. See handbook/stacks/swift.md, "CI".
 #
 # Caller (in <repo>/.github/workflows/ci.yml):
 #   jobs:
@@ -152,7 +152,7 @@ jobs:
 
       - name: Test
         # COMPAT_RUN=1 reaches the tests as an environment variable; suites that need real sockets or
-        # WebKit are disabled with it (handbook/code-standards.md, Tests). The hosted macOS 26 image is
+        # WebKit are disabled with it (handbook/stacks/swift.md, Tests). The hosted macOS 26 image is
         # unreliable for them; the main job still runs everything.
         env:
           TEST_RUNNER_COMPAT_RUN: "1"

@@ -4,7 +4,7 @@ Write one when a PR changes an established way of working, or a decision would o
 conversation.
 
 1. Next number: the highest in `docs/adr/` plus one. File `docs/adr/NNNN-lowercase-title.md` from
-   `templates/adr.md`: H1 `# NNNN Title`, Status, Date, Related, then Context, Decision, Cost, Revisit
+   `handbook/templates/common/adr.md`: H1 `# NNNN Title`, Status, Date, Related, then Context, Decision, Cost, Revisit
    triggers (`None` allowed).
 2. Add the row to `docs/adr/README.md` with the same title as the H1.
 3. If it supersedes another, set that file's Status to `superseded by NNNN`.

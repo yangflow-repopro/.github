@@ -6,8 +6,8 @@ How every yangflow-repopro project is built. Product repositories do not restate
 ## Language
 
 - Everything except UI copy is English: code, comments, docs, scripts, logs, commits, PRs, CHANGELOG,
-  release notes. UI copy is multilingual and lives in the String Catalog. `CHANGELOG.zh.md` is the one
-  Chinese file per app; it feeds the Chinese website.
+  release notes. UI copy is multilingual and lives where `handbook/localization.md` says for the repository type.
+  `CHANGELOG.zh.md` is the one Chinese file per product; it feeds the Chinese website.
 - Keep descriptions short: one necessary sentence beats a paragraph. Explain why, constraints and
   gotchas; do not restate the code.
 
@@ -15,7 +15,7 @@ How every yangflow-repopro project is built. Product repositories do not restate
 
 | Role | Who | Owns |
 |---|---|---|
-| Product and design decisions | Maintainer | Requirements, designs, final acceptance on a real Mac, merging |
+| Product and design decisions | Maintainer | Requirements, designs, final acceptance where `handbook/ui-workflow.md` says for the repository type, merging |
 | Implementation | AI collaborator | Spec drafts, mockups, code, tests, self-review, PRs |
 
 The docs (`docs/`) are the only source of truth. When something is ambiguous, change the docs first,
@@ -44,7 +44,8 @@ Spec ──► Design ──► Implement ──► Accept
 - Feature branches: `feat/<topic>`, `fix/<topic>`, `docs/<topic>`, `design/<topic>`, `build/<topic>`,
   `ci/<topic>`, `refactor/<topic>`; prefix the milestone when attached: `feat/m3-service-list`.
 - PRs are squash-merged; the merged commit title is the PR title. Delete the branch after merging.
-- No merge without green CI (see `handbook/code-standards.md`, CI).
+- No merge without green checks (the CI section of the language stack and of the repository type's `code.md`;
+  `handbook/ui-workflow.md`, Merging and CI).
 
 ## Commits (Conventional Commits)
 

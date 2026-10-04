@@ -1,6 +1,7 @@
 # UI workflow
 
-How a screen goes from an idea to an accepted, shipped view. It applies to every app repository; a repository's
+How a screen goes from an idea to an accepted, shipped view. It applies to every repository with a UI (`app` and
+`selfhosted`); a repository's
 `docs/process.md` records only differences. `scripts/check-docs.py` and `scripts/design-review.py` enforce and
 support it.
 
@@ -25,8 +26,8 @@ spec -> design -> review -> develop -> device acceptance -> archive
 | 2 Design | A new screen gets 2 or 3 directions; a redesign gets before and after; a small change to an existing screen changes the file only | `design/screens/<screen>.direction-<x>.html` | The file shows every state, light and dark | `proposed` |
 | 3 Review | The maintainer looks at each screen (`design-review.py`) and answers "approve" or "change to ..." | Ledger row with the date and the chosen direction | The maintainer says approve for that screen. A blanket "go with your suggestion" counts only for what was shown | `signed-off` |
 | 3b Sync | Right after approval: rename the chosen file to `<screen>.html`, delete the other directions, align spec, `docs/design.md` and the README | One documentation PR | `check-docs.py` passes; no `direction` file is left | `signed-off` |
-| 4 Develop | One PR per screen: `UI/<Screen>/`, model, tests, previews, accessibility identifiers, strings in every language | A PR | Local checks pass (below). The PR is **not merged** | `in-review` |
-| 5 Device acceptance | Export light and dark captures of every state from the real app; the maintainer compares them with the design | `design/screenshots/<screen>/` (device captures only) | The maintainer says the screen is accepted. Only then does the PR merge | `accepted` |
+| 4 Develop | One PR per screen: the screen's code directory, model, tests, every state renderable, identifiers, strings in every language (see Code directories and captures) | A PR | Local checks pass (below). The PR is **not merged** | `in-review` |
+| 5 Device acceptance | Capture every state from the real product as the repository type defines; the maintainer compares them with the design and checks the screen where the type says | `design/screenshots/<screen>/` (real captures only) | The maintainer says the screen is accepted. Only then does the PR merge | `accepted` |
 | 6 Archive | Merge, delete the branch, ledger row to `accepted`, one line in the decision log | `main` | Ledger, files and code directory agree | `accepted` |
 
 ## Iron rules
@@ -40,6 +41,17 @@ spec -> design -> review -> develop -> device acceptance -> archive
 5. Only the maintainer's explicit words move a screen to `signed-off` or `accepted`. An agent records them; it
    never infers them.
 
+## Code directories and captures
+
+| | `app` | `selfhosted` |
+|---|---|---|
+| Screen code | `<Name>/UI/<Screen>/` | `web/src/screens/<screen>/`; native shell screens in `macos/<Name>/UI/<Screen>/` |
+| Every state renderable | A `#Preview` per state | `states.ts` per screen, rendered at `/__states/<screen>/<state>` in development builds |
+| Identifiers | `accessibilityIdentifier` `<screen>.<element>` | `data-testid="<screen>.<element>"` |
+| Captures | Exported from the running app on a Mac: every state, light and dark | `scripts/capture-screens.mjs` against the running image: every state at the phone and desktop viewports, light and dark, named `<state>-<viewport>-<scheme>.png`; shell screens as for apps |
+| Where the maintainer accepts | On a Mac | In a desktop browser, on a real phone, and inside the macOS shell's window |
+| Automated UI checks | `scripts/ax-audit.swift` | The accessibility check in the end-to-end suite (`handbook/types/selfhosted/code.md`) |
+
 ## Status vocabulary
 
 Exactly five words, in the ledger's Status column: `planned`, `proposed`, `signed-off`, `in-review`, `accepted`.
@@ -47,7 +59,8 @@ Anything else fails `check-docs.py`.
 
 ## The ledger
 
-The Screens table of `design/README.md` (template `design-README.md` v2) is the single source of truth:
+The Screens table of `design/README.md` (template `handbook/templates/common/design-README.md` v2) is the single
+source of truth:
 
 | Screen | Spec | Design file | Code dir | Status | Signed off | Accepted |
 |---|---|---|---|---|---|---|
@@ -79,7 +92,8 @@ renders. History is in Git.
 
 ### Screenshots
 
-Only captures from the real app, produced in stage 5, are committed. Renders of the design files are not.
+Only captures from the real product, produced in stage 5 as Code directories and captures defines, are committed.
+Renders of the design files are not.
 
 ## Review tool
 
@@ -95,12 +109,13 @@ brackets.
 
 ## Merging and CI
 
-- Checks run locally and must pass: formatter, tests, `check-docs.py`, `check-tokens.py`. Hosted CI is not used
-  for macOS minutes.
+- Checks run locally and must pass. `app`: formatter, tests, `check-docs.py`, `check-tokens.py`; hosted CI is not
+  used for macOS minutes. `selfhosted`: the `check` and `image` jobs of `handbook/types/selfhosted/code.md` (CI) and
+  `check-tokens.py`, run locally; a merge does not wait for hosted CI.
 - A UI code PR also needs the maintainer's device acceptance (stage 5). Documentation and fix PRs merge once the
   local checks pass.
 - Stage explicit paths only; never `git add -A` or `git commit -a`.
-- Noise the build writes to `Localizable.xcstrings` (entries marked `stale`) is not committed.
+- `app`: noise the build writes to `Localizable.xcstrings` (entries marked `stale`) is not committed.
 
 ## Who owns which document
 

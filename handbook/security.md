@@ -24,6 +24,30 @@ description. Each app keeps a `docs/milestones/<release>-security.md` with the p
 - Credentials used by the app are stored in the user's Keychain only, never in preferences or files.
   Secrets in subprocess output are redacted before they reach logs.
 
+## Self-hosted products
+
+A `selfhosted` product runs a server on the user's host, holds the user's credentials and sessions, and may be
+reachable from the network. On top of the rules above:
+
+- **Threat model.** `docs/threat-model.md` lists assets, trust boundaries and each threat with its mitigation and
+  how it is verified. A change that adds a boundary (a new port, a hosted service, a new kind of content the product
+  reads) updates it in the same PR. Each release's walkthrough checks every row.
+- **No unauthenticated mode.** Every API request and WebSocket is authenticated, including from localhost; the macOS
+  shell passes its token to the web view. Requests are checked for origin; the core sets a strict Content Security
+  Policy.
+- **Network exposure is opt-in.** The image's port is published on `127.0.0.1` by default; LAN or internet exposure
+  is a documented change in `docs/hosting.md`.
+- **Secrets at rest.** On a Mac host, credentials live in the Keychain and reach the core at start. On a Linux host,
+  they live in a file in the data directory readable only by the core's user. They never appear in environment
+  variables baked into the image, in the web UI in clear text after entry, or in logs.
+- **Container hardening** as in `handbook/types/selfhosted/code.md`: non-root, read-only root filesystem, dropped
+  capabilities, `no-new-privileges`, never the container runtime's socket.
+- **Supply chain.** Base images pinned by digest, exact dependency versions, a committed lockfile, an image
+  vulnerability scan in CI and at release, an SBOM and a signature on every released image.
+- **Hosted services** the product depends on never receive user content in clear text; a walkthrough covers their
+  key handling before the first release.
+- `scripts/scan_secrets.py` also runs on the image's exported filesystem before every release.
+
 ## Reporting
 
 See `SECURITY.md` at the root of this repository.

@@ -1,4 +1,4 @@
 {
-  "forbidden": ["barekeep", "loggia", "useloggia", "stoa", "cella", "gitrelay"],
+  "forbidden": ["barekeep", "loggia", "useloggia", "herald", "pronaos", "stoa", "cella", "gitrelay"],
   "ignore": ["handbook/*", "scripts/*", "pull_request_template.md", "ISSUE_TEMPLATE/*"]
 }
