@@ -11,7 +11,7 @@ Violations are bugs.
 | Runtime | Node.js, the current Active LTS major, pinned in `.node-version`; anything else that names a Node.js version (a container base image, a CI setup step) must agree with it |
 | Package manager | pnpm workspace; version pinned in the root `package.json` `packageManager` field; `pnpm install --frozen-lockfile` everywhere |
 | Language | TypeScript, ES modules only. `tsconfig.base.json`: `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `noImplicitOverride`, `noFallthroughCasesInSwitch`, `verbatimModuleSyntax` |
-| Formatting and lint | Biome with the shared `biome.json`, identical in every TypeScript repository; CI runs `biome ci`. Warnings are errors |
+| Formatting and lint | Biome, exact version in the root `package.json`; `biome.json` is a copy of `handbook/stacks/biome.json`, identical in every TypeScript repository; CI runs `biome ci --error-on-warnings`. Raising the Biome version updates that file first |
 | Type check | `tsc --noEmit` per package; CI fails on any error |
 | Dependencies | Exact versions only; `pnpm-lock.yaml` committed; every dependency in `THIRD_PARTY.md` (`check-docs.py` compares them and fails on a range) |
 | Licenses | Shipped dependencies are MIT, BSD, ISC, Apache-2.0 or MPL-2.0. Anything else needs an ADR |
