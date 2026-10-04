@@ -19,7 +19,7 @@ repositories link here and record only their differences.
 | [localization.md](localization.md) | Languages, adding a string, adding a language |
 | [legal.md](legal.md) | Legal pages: one source per fact, skeletons, fixed wording |
 | [agents.md](agents.md) | Working rules for AI collaborators |
-| [playbooks/](playbooks/add-feature.md) | Step lists: feature, screen, string, language, ADR, release, dependency |
+| [playbooks/](playbooks/add-feature.md) | Step lists: feature, screen, string, language, ADR, release, dependency; self-hosted ones in `playbooks/selfhosted/` |
 | [templates/](templates/manifest.json) | Templates for every document and which repository type needs which |
 
 Changing a rule: open a PR here, link it from the product PR that needs it.
