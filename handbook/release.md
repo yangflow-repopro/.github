@@ -1,4 +1,4 @@
-# Releases
+# Releases (macOS apps)
 
 Apps are closed source, notarized, shipped from the product website and updated in-app with Sparkle 2.
 The appcast and downloads live on Cloudflare R2 behind `dl.<product-domain>`.

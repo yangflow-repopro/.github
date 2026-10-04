@@ -6,9 +6,12 @@ repositories link here and record only their differences.
 | File | Covers |
 |---|---|
 | [process.md](process.md) | Roles, milestones, branches, commits, PRs, issues, labels, Definition of Done |
-| [code-standards.md](code-standards.md) | Toolchain, concurrency, architecture, localization, design, accessibility, tests, CI |
+| [code-standards.md](code-standards.md) | macOS apps: toolchain, concurrency, architecture, localization, design, accessibility, tests, CI |
+| [code-standards-selfhosted.md](code-standards-selfhosted.md) | Self-hosted products: toolchain, architecture, container image, web UI, accessibility, logging, tests, CI |
 | [repo-layout.md](repo-layout.md) | Standard directory tree and file set for an app repository |
-| [release.md](release.md) | Versions, tags, changelog, release pipeline, launch checklist |
+| [repo-layout-selfhosted.md](repo-layout-selfhosted.md) | Standard directory tree and file set for a self-hosted product |
+| [release.md](release.md) | macOS apps: versions, tags, changelog, release pipeline, launch checklist |
+| [release-selfhosted.md](release-selfhosted.md) | Self-hosted products: one version, image and app artifacts, pipeline, updates, launch checklist |
 | [security.md](security.md) | Red lines, walkthroughs, scanning |
 | [website.md](website.md) | Static websites: generator, rules, checks, deploy |
 | [docs.md](docs.md) | The documentation system: map, rules, names, lifecycle |

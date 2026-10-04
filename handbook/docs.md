@@ -75,7 +75,8 @@ existing type. A template is shared between types only when every one of its sec
   numbered milestones are not kept after the release that finished them.
 - ADRs: `NNNN-title.md`, four digits, lowercase hyphenated title; the index lists every file once, with the
   same title as the file's H1.
-- Screens: `design/screens/<screen>.html`, named like the code directory `UI/<Screen>/`.
+- Screens: `design/screens/<screen>.html`, named like the screen's code directory (`ui-workflow.md`, Code
+  directories and captures).
 
 ## Lifecycle of an iteration
 
