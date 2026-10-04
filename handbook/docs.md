@@ -16,7 +16,7 @@ Each document answers one question.
 | `CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md` | (pointers) | one line: `@AGENTS.md` |
 | `docs/spec.md` | What to build and what not; data, modules, flows, acceptance | `spec.md` |
 | `docs/design.md` | The design language: tokens, components, materials, motion, copy tone, accessibility | `design.md` |
-| `design/README.md` | How to read the mockups, which screens exist, why they look so | `design-README.md` |
+| `design/README.md` | How to read the mockups; the ledger of screens and their status (`ui-workflow.md`) | `design-README.md` |
 | `docs/roadmap.md` | The order of work after the baseline | `roadmap.md` |
 | `docs/milestones/v<X.Y>.md` | One iteration: goal, scope, decisions, tests, acceptance | `milestone.md` |
 | `docs/milestones/v<X.Y>-security.md` | The security walkthrough recorded for a release | `security-walkthrough.md` |
@@ -66,6 +66,9 @@ Which documents a repository needs depends on its type, declared in `.repo-type`
 `Issue` (the tracking issue) → `docs/milestones/next.md` (goal, scope, decisions) → design (`design/screens/`)
 → implementation PRs → acceptance on a Mac → `next.md` becomes `v<X.Y>.md`, `CHANGELOG.md` gets its dated
 section, the release is tagged. The playbooks in `playbooks/` list the steps and the files each touches.
+
+The lifecycle of a screen, the ledger in `design/README.md` and the `design/` whitelist are in
+`ui-workflow.md`.
 
 ## Pointers for AI tools
 

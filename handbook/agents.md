@@ -22,4 +22,8 @@ These rules hold in every repository. A repository's `AGENTS.md` adds only what 
      deleting history or branches other than your own need the maintainer's confirmation each time.
    - Never modify a user's dotfiles or global Git configuration.
    - No blind staging (`git add -A`, `git commit -a`): check the file list.
-8. **Product names stay in the product's repository.** In handbook, templates and shared code use `<Name>`.
+8. **UI work follows the gates in `ui-workflow.md`.** Never choose a design direction for the maintainer. Never
+   mark a screen `signed-off` or `accepted` yourself: record those only on the maintainer's explicit words
+   (the review tool writes them to `.design-review/decisions.jsonl`). Develop one screen at a time. When spec,
+   design and code disagree, stop and ask. Update the ledger in the same PR as the change it records.
+9. **Product names stay in the product's repository.** In handbook, templates and shared code use `<Name>`.

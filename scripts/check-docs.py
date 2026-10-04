@@ -9,8 +9,13 @@ The repository declares its type in `.repo-type` (app, website, library, templat
      "allow": ["path/glob", ...],              files exempt from the name check
      "ignore": ["path/glob", ...],             files exempt from the reference checks
      "external": ["docs/legal.md", ...],        paths that live in another repository (e.g. the app's)
-     "pending": ["docs/design.md", ...]}       required documents whose template check is postponed
+     "pending": ["docs/design.md", ...],       required documents whose template check is postponed
                                                (temporary, with a plan entry that removes it)
+     "design_icons": ["icon.html", ...]}       extra top-level entries allowed in design/ (icon sources)
+
+When design/README.md carries the `design-README.md v2` marker the ledger checks run (handbook/ui-workflow.md):
+rows against design/screens, code dirs, status words, dates, screenshots, spec anchors, design/ whitelist.
+Repositories still on v1 are not ledger-checked until they migrate.
 
 Pull request checks run when PR_BASE is set (the base branch ref, e.g. origin/main) together with
 PR_TITLE and PR_LABELS (comma separated):
@@ -79,6 +84,8 @@ def check_against(rel, template_name, text=None):
             err(rel, "first line must carry '(template: LICENSE v1)'")
         return
     want_marker, have_marker = marker(tmpl), marker(text)
+    if template_name == "design-README.md" and have_marker == (want_marker[0], 1):
+        have_marker = want_marker  # v1 stays valid until the repository migrates (same H2 sections)
     if have_marker != want_marker:
         err(rel, f"first line must be '<!-- template: {want_marker[0]} v{want_marker[1]} -->' (found {have_marker})")
     have = h_lines(text, 2)
@@ -90,6 +97,104 @@ def check_against(rel, template_name, text=None):
         have = have[:1]
     if h_lines(tmpl, 2) != have:
         err(rel, f"H2 sections differ from template {template_name}: expected {h_lines(tmpl, 2)}, found {have}")
+
+
+LEDGER_COLUMNS = ["screen", "spec", "design file", "code dir", "status", "signed off", "accepted"]
+STATUSES = ["planned", "proposed", "signed-off", "in-review", "accepted"]
+DESIGN_FIXED = {"README.md", "tokens.html", "check-tokens.py", "screens", "screenshots", ".DS_Store", "__pycache__"}
+DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
+
+
+def ledger_rows(text):
+    """Rows of the first table under '## Screens': (header, [cells])."""
+    rows, in_section, header = [], False, None
+    for line in text.split("\n"):
+        if line.startswith("## "):
+            in_section = line[3:].strip() == "Screens"
+        elif in_section and line.startswith("|"):
+            cells = [c.strip() for c in line.strip().strip("|").split("|")]
+            if header is None:
+                header = [c.lower() for c in cells]
+            elif not all(re.fullmatch(r":?-+:?", c) for c in cells):
+                rows.append(cells)
+    return header, rows
+
+
+def check_ledger(config):
+    readme = ROOT / "design/README.md"
+    if not readme.is_file():
+        return
+    text = readme.read_text(encoding="utf-8")
+    if not text.startswith("<!-- template: design-README.md v2 -->"):
+        return
+    rel = "design/README.md"
+    header, rows = ledger_rows(text)
+    if header != LEDGER_COLUMNS:
+        err(rel, f"Screens table columns must be {LEDGER_COLUMNS}, found {header}")
+        return
+    strip = lambda c: c.strip().strip("`").strip()
+    screens_dir = ROOT / "design/screens"
+    files = sorted(p.name for p in screens_dir.glob("*.html")) if screens_dir.is_dir() else []
+    directions = {}  # key -> direction files
+    plain = set()
+    for name in files:
+        m = re.fullmatch(r"(.+)\.direction-[^.]+\.html", name)
+        if m:
+            directions.setdefault(m.group(1), []).append(name)
+        else:
+            plain.add(name[:-5])
+    spec = ROOT / "docs/spec.md"
+    spec_anchors = anchors(spec.read_text(encoding="utf-8")) if spec.is_file() else set()
+    seen = {}
+    for cells in rows:
+        row = dict(zip(LEDGER_COLUMNS, [strip(c) for c in cells]))
+        name = row["screen"]
+        status = row["status"]
+        m = re.fullmatch(r"screens/(.+)\.html", row["design file"])
+        key = m.group(1) if m else name
+        where = f"{rel} ({name})"
+        if key in seen:
+            err(where, f"duplicate ledger row for {key}")
+        seen[key] = status
+        if status not in STATUSES:
+            err(where, f"status {status!r} must be one of {', '.join(STATUSES)}")
+            continue
+        sm = re.fullmatch(r"docs/spec\.md#([\w-]+)", row["spec"])
+        if not sm:
+            err(where, f"Spec cell must be docs/spec.md#anchor, found {row['spec']!r}")
+        elif sm.group(1) not in spec_anchors:
+            err(where, f"spec anchor {row['spec']} does not exist")
+        if status != "planned":
+            if not m:
+                err(where, "Design file cell must be screens/<screen>.html")
+            elif key not in plain and not (status == "proposed" and key in directions):
+                err(where, f"design/screens/{key}.html does not exist")
+        if status != "proposed" and key in directions:
+            err(where, f"status {status} must not have direction files ({directions[key][0]}...): "
+                       "rename the chosen one to <screen>.html and delete the rest")
+        if status in ("in-review", "accepted"):
+            code = row["code dir"]
+            if not code or not (ROOT / code).is_dir():
+                err(where, f"code dir {code!r} does not exist (required for {status})")
+        if status in ("signed-off", "in-review", "accepted") and not DATE.fullmatch(row["signed off"]):
+            err(where, f"status {status} needs a Signed off date (YYYY-MM-DD)")
+        if status == "accepted":
+            if not DATE.fullmatch(row["accepted"]):
+                err(where, "status accepted needs an Accepted date (YYYY-MM-DD)")
+            shots = ROOT / "design/screenshots" / key
+            if not shots.is_dir() or not list(shots.glob("*.png")):
+                err(where, f"status accepted needs device screenshots: design/screenshots/{key}/*.png")
+        elif row["accepted"]:
+            err(where, f"Accepted date is set but status is {status}")
+    for key in sorted(plain | set(directions)):
+        if key not in seen:
+            err(f"design/screens/{key}.html", "no row in the design/README.md ledger")
+    design = ROOT / "design"
+    allowed = DESIGN_FIXED | set(config.get("design_icons", []))
+    for p in sorted(design.iterdir()):
+        if p.name not in allowed:
+            err(f"design/{p.name}", "not on the design/ whitelist (README.md, tokens.html, check-tokens.py, screens/, "
+                                    "screenshots/, icon sources listed in .docs-check.json design_icons)")
 
 
 def main():
@@ -120,6 +225,8 @@ def main():
             err(rel, "missing: pointer file containing only '@AGENTS.md'")
         elif p.read_text().strip() != "@AGENTS.md":
             err(rel, "must contain only the line '@AGENTS.md'")
+
+    check_ledger(config)
 
     # 2. ADRs
     adr_dir = ROOT / "docs/adr"
