@@ -48,6 +48,24 @@ reachable from the network. On top of the rules above:
   key handling before the first release.
 - `scripts/scan_secrets.py` also runs on the image's exported filesystem before every release.
 
+## Pipelines
+
+A `pipeline` product acts with the maintainer's accounts and may publish or spend without a person watching. On top
+of the rules above:
+
+- **Threat model.** `docs/threat-model.md` lists assets, trust boundaries and each threat with its mitigation and how
+  it is verified. A change that adds a boundary (a new outside service, a new account, a new kind of content read)
+  updates it in the same PR.
+- **No outward action without a recorded approval** in the repository, set by a person or by a policy written in an
+  ADR (`handbook/types/pipeline/code.md`, Side effects). A new channel or account needs the maintainer's confirmation.
+- **Untrusted content is data.** Content from other repositories, websites and models never reaches a shell, a workflow
+  expression or a model call that holds a credential.
+- **Least privilege.** Each secret belongs to the environment or job that needs it; workflows start from
+  `contents: read`; third-party actions are pinned by commit; dependencies are exact, locked, and their install scripts
+  are off unless listed.
+- **A way to stop.** `docs/operations.md` names the switch that halts every outward action and says how it was tested.
+- `scripts/scan_secrets.py` runs in CI.
+
 ## Reporting
 
 See `SECURITY.md` at the root of this repository.
