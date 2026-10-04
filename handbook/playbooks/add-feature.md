@@ -10,8 +10,10 @@ The only way a feature starts. Do not write code first.
 
 1. Put the feature in the iteration: edit `docs/milestones/next.md` (Goal, Scope, Non-goals, Decisions,
    Acceptance checklist). If it changes what the product is, edit `docs/spec.md` first.
-2. If it has UI: add or change `design/screens/<screen>.html` (all states, light and dark) and get it signed
-   off. No UI code before sign-off. See `add-screen.md`.
+2. If it has UI: put the feature in `docs/spec.md` with the screen it belongs to and follow `add-screen.md`
+   (design, maintainer sign-off, code, device acceptance). No UI code before sign-off; no merge of UI code
+   before the maintainer has accepted the screen on a device. Update the ledger in `design/README.md` in the
+   same PR.
 3. If it changes an established way of working: write the ADR (`write-adr.md`).
 4. Implement in small PRs on a `feat/<topic>` branch. Strings follow `add-string.md`. Each PR description
    says what, why, how to verify, and carries screenshots for UI.
@@ -19,7 +21,7 @@ The only way a feature starts. Do not write code first.
 
 ## Files this touches
 
-`docs/milestones/next.md`, maybe `docs/spec.md`, `design/screens/`, code and tests, `CHANGELOG.md`,
+`docs/milestones/next.md`, maybe `docs/spec.md`, `design/screens/`, `design/README.md` (ledger), code and tests, `CHANGELOG.md`,
 `CHANGELOG.zh.md`, maybe `docs/adr/`.
 
 ## Check yourself

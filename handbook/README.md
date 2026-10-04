@@ -12,6 +12,7 @@ repositories link here and record only their differences.
 | [security.md](security.md) | Red lines, walkthroughs, scanning |
 | [website.md](website.md) | Static websites: generator, rules, checks, deploy |
 | [docs.md](docs.md) | The documentation system: map, rules, names, lifecycle |
+| [ui-workflow.md](ui-workflow.md) | Screen lifecycle, gates, ledger, `design/` whitelist, review tool, merge rule |
 | [localization.md](localization.md) | Languages, adding a string, adding a language |
 | [legal.md](legal.md) | Legal pages: one source per fact, skeletons, fixed wording |
 | [agents.md](agents.md) | Working rules for AI collaborators |
