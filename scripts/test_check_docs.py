@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Self-test for check-docs.py (ledger rules): python3 scripts/test_check_docs.py"""
+"""Self-test for check-docs.py (ledger rules, selfhosted type): python3 scripts/test_check_docs.py"""
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -29,13 +30,13 @@ FILES = {
 }
 
 
-def make(rows=None, files=None, remove=(), config=None, readme=None):
+def make(rows=None, files=None, remove=(), config=None, readme=None, repo_type="app"):
     tmp = tempfile.TemporaryDirectory()
     root = Path(tmp.name)
-    cfg = {"pending": list(MANIFEST["types"]["app"]), **(config or {})}
+    cfg = {"pending": list(MANIFEST["types"][repo_type]), **(config or {})}
     all_files = {**FILES, **(files or {})}
     all_files["design/README.md"] = readme if readme is not None else HEADER + "\n".join(rows or GOOD_ROWS) + "\n" + FOOTER
-    all_files[".repo-type"] = "app"
+    all_files[".repo-type"] = repo_type
     all_files[".docs-check.json"] = json.dumps(cfg)
     for p in MANIFEST["pointers"]:
         all_files[p] = "@AGENTS.md\n"
@@ -49,9 +50,19 @@ def make(rows=None, files=None, remove=(), config=None, readme=None):
     return tmp, root
 
 
-def run(root):
-    r = subprocess.run([sys.executable, str(HERE / "check-docs.py"), str(root)], capture_output=True, text=True)
+def run(root, env=None):
+    r = subprocess.run([sys.executable, str(HERE / "check-docs.py"), str(root)], capture_output=True, text=True,
+                       env={**os.environ, **(env or {})})
     return r.returncode, r.stdout
+
+
+def template(name):
+    return (HERE.parent / "handbook/templates" / name).read_text()
+
+
+def git(root, *args):
+    subprocess.run(["git", "-C", str(root), "-c", "user.name=t", "-c", "user.email=t@t", *args], check=True,
+                   capture_output=True)
 
 
 class Test(unittest.TestCase):
@@ -107,6 +118,67 @@ class Test(unittest.TestCase):
 
     def test_columns(self):
         self.fails("columns must be", readme=HEADER.replace("| Accepted |", "| Done |") + FOOTER)
+
+
+
+class SelfhostedTest(unittest.TestCase):
+    def check(self, **kw):
+        tmp, root = make(repo_type="selfhosted", **kw)
+        with tmp:
+            return run(root)
+
+    def without_pending(self, *rels):
+        return {"pending": [r for r in MANIFEST["types"]["selfhosted"] if r not in rels]}
+
+    def test_good(self):
+        self.assertEqual(self.check(), (0, "docs ok\n"))
+
+    def test_templates(self):
+        rels = ("LICENSE", "THIRD_PARTY.md", "docs/hosting.md", "docs/threat-model.md", "docs/design.md")
+        files = {rel: template(MANIFEST["types"]["selfhosted"][rel]) for rel in rels}
+        self.assertEqual(self.check(files=files, config=self.without_pending(*rels)), (0, "docs ok\n"))
+
+    def test_app_license_is_rejected(self):
+        code, out = self.check(files={"LICENSE": template("LICENSE")}, config=self.without_pending("LICENSE"))
+        self.assertEqual(code, 1)
+        self.assertIn("(template: selfhosted-LICENSE v1)", out)
+
+    def test_milestone_template(self):
+        code, out = self.check(files={"docs/milestones/next.md": template("milestone.md")})
+        self.assertEqual(code, 1)
+        self.assertIn("selfhosted-milestone.md", out)
+        ok = self.check(files={"docs/milestones/next.md": template("selfhosted-milestone.md")})
+        self.assertEqual(ok, (0, "docs ok\n"))
+
+    def test_package_versions(self):
+        third = template("selfhosted-THIRD_PARTY.md").replace(
+            "| <Name> | <x.y.z, matches package.json or Package.resolved> |", "| `lib` | 1.2.3 |")
+        files = {"THIRD_PARTY.md": third, "core/package.json": json.dumps({"dependencies": {"lib": "1.2.3"}})}
+        self.assertEqual(self.check(files=files)[0], 0)
+        code, out = self.check(files={**files, "core/package.json": json.dumps({"dependencies": {"lib": "^1.2.3"}})})
+        self.assertIn("is not an exact version", out)
+        code, out = self.check(files={**files, "web/package.json": json.dumps({"devDependencies": {"other": "2.0.0"}})})
+        self.assertIn("other is in web/package.json but has no row", out)
+        code, out = self.check(files={**files, "core/package.json": json.dumps({"dependencies": {"lib": "1.2.4"}})})
+        self.assertIn("lib is 1.2.4", out)
+
+    def test_names_in_typescript(self):
+        code, out = self.check(files={"core/src/a.ts": "// like Rival does\n"}, config={"forbidden": ["rival"]})
+        self.assertEqual(code, 1)
+        self.assertIn("core/src/a.ts:1: mentions 'Rival'", out)
+
+    def test_screen_code_needs_design_change(self):
+        tmp, root = make(repo_type="selfhosted")
+        with tmp:
+            git(root, "commit", "-q", "-m", "base")
+            git(root, "branch", "base")
+            (root / "web/src/screens/alpha").mkdir(parents=True)
+            (root / "web/src/screens/alpha/view.tsx").write_text("x")
+            git(root, "add", ".")
+            git(root, "commit", "-q", "-m", "change")
+            code, out = run(root, {"PR_BASE": "base", "PR_TITLE": "refactor: x", "PR_LABELS": ""})
+            self.assertEqual(code, 1)
+            self.assertIn("UI code changed (web/src/screens/alpha/view.tsx", out)
 
 
 if __name__ == "__main__":

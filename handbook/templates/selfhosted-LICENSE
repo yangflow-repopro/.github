@@ -1,0 +1,59 @@
+Terms of Service (template: selfhosted-LICENSE v1)
+
+Copyright (c) <year> yangflow. All rights reserved.
+
+Last updated <Month Year>
+
+1. License
+   <Grant: non-exclusive, non-transferable, official releases (the macOS app and the container image), on hosts the
+   user owns or controls; licensed, not sold.>
+
+2. Plans
+   <What each plan includes and its limits; which versions a paid plan covers.>
+
+3. Activation and verification
+   <What the host sends to the licensing service, how often, the offline grace period; or that there is none.>
+
+4. Your host and your data
+   <The product's slot: the software runs on the user's host; what it stores there, where credentials and sessions
+   live, what never leaves the host, what the user is responsible for (backups, the host's security).>
+
+5. Services you connect
+   <Model providers, websites and accounts the user connects: the user's own accounts under the providers' own
+   terms; the user is responsible for complying with them; we do not receive the user's credentials.>
+
+6. Actions taken on your behalf
+   <The software acts only within the permissions the user grants; actions with an outside effect need approval as
+   the product defines; the user is responsible for actions they approve or allow in advance.>
+
+7. Hosted services
+   <Services we operate for the product (for example remote access): what they see, that they carry no availability
+   guarantee, how they may change or end.>
+
+8. Restrictions
+   <No reverse engineering, redistribution of the image or the app, circumvention of plan limits; limits of use.>
+
+9. Updates
+   <How the macOS app and the container image are updated, signature and digest verification, that updates never
+   install without the user's action on Linux hosts.>
+
+10. Third-party components
+    <Pointer to THIRD_PARTY.md and the licenses of the components in the image and the app.>
+
+11. Purchases and refunds
+    <Merchant of record (Dodo Payments), refund window, how to ask.>
+
+12. Intellectual property
+    <Ownership.>
+
+13. Termination
+    <When the license ends; what happens to the software and the data on the user's host.>
+
+14. Disclaimer
+    <As is.>
+
+15. Limitation of liability
+    <Cap; no liability for actions the user approved or for third-party services.>
+
+16. Changes
+    <How terms change and how users are told.>

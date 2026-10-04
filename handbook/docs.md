@@ -28,9 +28,25 @@ Each document answers one question.
 | `THIRD_PARTY.md` | Every dependency: version, license, shipped or not, where its notice is | `THIRD_PARTY.md` |
 | `SECURITY.md` | Where to report a vulnerability | `SECURITY.md` |
 | `LICENSE` | The terms of service, which are also the license agreement | `LICENSE` |
+| `docs/hosting.md` | What the product needs from and promises to the user's host: ports, data, resources, upgrades | `hosting.md` |
+| `docs/threat-model.md` | What the product protects, where the trust boundaries are, how each threat is mitigated | `threat-model.md` |
 
-Which documents a repository needs depends on its type, declared in `.repo-type` at the repository root
-(`app`, `website`, `library`, `template`, `org`). `scripts/check-docs.py` holds the table.
+## Repository types
+
+Which documents a repository needs, and from which template, depends on its type, declared in `.repo-type` at the
+repository root. `templates/manifest.json` holds the table; `scripts/check-docs.py` enforces it.
+
+| Type | What it is | Templates of its own |
+|---|---|---|
+| `app` | A native macOS app distributed as a notarized download | The ones in the map above |
+| `selfhosted` | A product the user runs on their own host: a container image with a web UI, run by a native macOS shell on Macs and by Docker Compose on Linux | `selfhosted-README.md`, `selfhosted-design.md`, `selfhosted-milestone.md`, `selfhosted-THIRD_PARTY.md`, `selfhosted-LICENSE`; it alone needs `docs/hosting.md` and `docs/threat-model.md` |
+| `website` | A product's static website | `website-README.md`, `website-design.md`, `content.md` |
+| `library` | Shared code or tooling used by other repositories | `library-README.md`, `library-design.md` |
+| `template` | A repository other repositories are created from | `library-README.md` |
+| `org` | This repository | `org-README.md` |
+
+A new kind of project gets its own type with templates written for it; it is not declared as the nearest
+existing type. A template is shared between types only when every one of its sections fits both.
 
 ## Rules
 

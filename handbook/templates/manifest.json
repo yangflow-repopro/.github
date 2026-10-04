@@ -23,6 +23,25 @@
       "design/README.md": "design-README.md",
       "LICENSE": "LICENSE"
     },
+    "selfhosted": {
+      "README.md": "selfhosted-README.md",
+      "AGENTS.md": "AGENTS.md",
+      "SECURITY.md": "SECURITY.md",
+      "CHANGELOG.md": "CHANGELOG.md",
+      "CHANGELOG.zh.md": "CHANGELOG.zh.md",
+      "THIRD_PARTY.md": "selfhosted-THIRD_PARTY.md",
+      "docs/spec.md": "spec.md",
+      "docs/design.md": "selfhosted-design.md",
+      "docs/hosting.md": "hosting.md",
+      "docs/threat-model.md": "threat-model.md",
+      "docs/roadmap.md": "roadmap.md",
+      "docs/legal.md": "legal.md",
+      "docs/website.md": "website.md",
+      "docs/process.md": "process.md",
+      "docs/adr/README.md": "adr-index.md",
+      "design/README.md": "design-README.md",
+      "LICENSE": "selfhosted-LICENSE"
+    },
     "website": {
       "README.md": "website-README.md",
       "AGENTS.md": "AGENTS.md",
@@ -55,8 +74,14 @@
     "docs/milestones/v*.md": "milestone.md",
     "docs/milestones/v*-security.md": "security-walkthrough.md"
   },
+  "type_patterns": {
+    "selfhosted": {
+      "docs/milestones/v*.md": "selfhosted-milestone.md"
+    }
+  },
   "pointer_types": [
     "app",
+    "selfhosted",
     "website",
     "library",
     "template",
