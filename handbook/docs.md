@@ -15,7 +15,7 @@ Each document answers one question. The template column names the template in `h
 | `README.md` | What is this, what state is it in, how do I build it, where is everything | `<type>/README.md` |
 | `AGENTS.md` | What must an AI collaborator know before changing anything | `AGENTS.md` |
 | `CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md` | (pointers) | one line: `@AGENTS.md` |
-| `docs/spec.md` | What to build and what not; data, modules, flows, acceptance | `spec.md` |
+| `docs/spec.md` | What to build and what not; data, modules, flows, acceptance | `spec.md`, or `pipeline/spec.md` |
 | `docs/architecture.md` | How a self-hosted product's parts fit: layers, boundaries, extension points, data flow, privacy | `selfhosted/architecture.md` |
 | `docs/design.md` | The design language: tokens, components, motion, copy tone, accessibility | `<type>/design.md` |
 | `design/README.md` | How to read the mockups; the ledger of screens and their status (`handbook/ui-workflow.md`) | `design-README.md` |
@@ -27,7 +27,8 @@ Each document answers one question. The template column names the template in `h
 | `docs/website.md` | What the product depends on from its website (paths, feeds, download copy) | `website.md` |
 | `docs/content.md` | Where each piece of a website's copy comes from | `website/content.md` |
 | `docs/hosting.md` | What the product needs from and promises to the user's host: ports, data, resources, upgrades | `selfhosted/hosting.md` |
-| `docs/threat-model.md` | What the product protects, where the trust boundaries are, how each threat is mitigated | `selfhosted/threat-model.md` |
+| `docs/threat-model.md` | What the product protects, where the trust boundaries are, how each threat is mitigated | `selfhosted/threat-model.md`, `pipeline/threat-model.md` |
+| `docs/operations.md` | What a pipeline needs to run and how to stop it: triggers, secrets, outside services, failure, switches, cost | `pipeline/operations.md` |
 | `docs/process.md` | Only what differs from the handbook for this repository | `process.md` |
 | `CHANGELOG.md`, `CHANGELOG.zh.md` | User-facing changes (Keep a Changelog) | `CHANGELOG.md`, `CHANGELOG.zh.md` |
 | `THIRD_PARTY.md` | Every dependency: version, license, shipped or not, where its notice is | `<type>/THIRD_PARTY.md` |
@@ -44,6 +45,7 @@ is described in `handbook/types/<type>/README.md`.
 |---|---|---|
 | `app` | A native macOS app distributed as a notarized download | README, design, THIRD_PARTY, LICENSE |
 | `selfhosted` | A product the user runs on their own host: a container image with a web UI, run by a native macOS shell on Macs and by Docker Compose on Linux | README, architecture, design, milestone, THIRD_PARTY, LICENSE, hosting, threat-model |
+| `pipeline` | A TypeScript command-line tool and the workflows that run it, acting with the maintainer's accounts; no UI, not distributed | README, spec, operations, threat-model, milestone, THIRD_PARTY |
 | `website` | A product's static website | README, design, content, THIRD_PARTY |
 | `library` | Shared code or tooling used by other repositories | README, design |
 | `template` | A repository other repositories are created from | README |

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Self-test for check-docs.py (ledger rules, selfhosted type): python3 scripts/test_check_docs.py"""
+"""Self-test for check-docs.py (ledger rules, selfhosted and pipeline types): python3 scripts/test_check_docs.py"""
 import json
 import re
 import os
@@ -181,6 +181,48 @@ class SelfhostedTest(unittest.TestCase):
             self.assertEqual(code, 1)
             self.assertIn("UI code changed (web/src/screens/alpha/view.tsx", out)
 
+
+
+class PipelineTest(unittest.TestCase):
+    def check(self, **kw):
+        tmp, root = make(repo_type="pipeline", **kw)
+        with tmp:
+            return run(root)
+
+    def test_good(self):
+        self.assertEqual(self.check(), (0, "docs ok\n"))
+
+    def test_templates(self):
+        docs = MANIFEST["types"]["pipeline"]["documents"]
+        rels = ("README.md", "THIRD_PARTY.md", "docs/operations.md", "docs/threat-model.md")
+        files = {rel: template(docs[rel]) for rel in rels}
+        pending = {"pending": [r for r in docs if r not in rels]}
+        self.assertEqual(self.check(files=files, config=pending), (0, "docs ok\n"))
+
+    def test_spec_template(self):
+        # the pipeline has no screens: a README without the ledger marker keeps the ledger checks off
+        pending = {"pending": [r for r in MANIFEST["types"]["pipeline"]["documents"] if r != "docs/spec.md"]}
+        files = {"docs/spec.md": template("pipeline/spec.md")}
+        self.assertEqual(self.check(files=files, config=pending, readme="# none\n"), (0, "docs ok\n"))
+
+    def test_common_spec_is_rejected(self):
+        pending = {"pending": [r for r in MANIFEST["types"]["pipeline"]["documents"] if r != "docs/spec.md"]}
+        code, out = self.check(files={"docs/spec.md": template("common/spec.md")}, config=pending, readme="# none\n")
+        self.assertEqual(code, 1)
+        self.assertIn("pipeline/spec.md", out)
+
+    def test_changelog_rule_applies_only_to_types_with_a_changelog(self):
+        for repo_type, expected in (("pipeline", 0), ("app", 1)):
+            tmp, root = make(repo_type=repo_type)
+            with tmp:
+                git(root, "commit", "-q", "-m", "base")
+                git(root, "branch", "base")
+                (root / "src").mkdir()
+                (root / "src/a.ts").write_text("x")
+                git(root, "add", ".")
+                git(root, "commit", "-q", "-m", "change")
+                code, out = run(root, {"PR_BASE": "base", "PR_TITLE": "feat: x", "PR_LABELS": ""})
+                self.assertEqual(code, expected, (repo_type, out))
 
 
 class HandbookTest(unittest.TestCase):

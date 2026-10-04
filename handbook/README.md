@@ -33,6 +33,7 @@ Each type has a directory with the same index (`README.md`: what it is, stacks, 
 |---|---|
 | `app` | [types/app/](types/app/README.md) |
 | `selfhosted` | [types/selfhosted/](types/selfhosted/README.md) |
+| `pipeline` | [types/pipeline/](types/pipeline/README.md) |
 | `website` | [types/website/](types/website/README.md) |
 | `library` | [types/library/](types/library/README.md) |
 | `template` | [types/template/](types/template/README.md) |

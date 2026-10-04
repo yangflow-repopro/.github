@@ -58,6 +58,24 @@
       },
       "milestone": "selfhosted/milestone.md"
     },
+    "pipeline": {
+      "stacks": [
+        "typescript"
+      ],
+      "documents": {
+        "README.md": "pipeline/README.md",
+        "AGENTS.md": "common/AGENTS.md",
+        "SECURITY.md": "common/SECURITY.md",
+        "THIRD_PARTY.md": "pipeline/THIRD_PARTY.md",
+        "docs/spec.md": "pipeline/spec.md",
+        "docs/operations.md": "pipeline/operations.md",
+        "docs/threat-model.md": "pipeline/threat-model.md",
+        "docs/roadmap.md": "common/roadmap.md",
+        "docs/process.md": "common/process.md",
+        "docs/adr/README.md": "common/adr-index.md"
+      },
+      "milestone": "pipeline/milestone.md"
+    },
     "website": {
       "stacks": [
         "python"
