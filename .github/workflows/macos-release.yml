@@ -1,4 +1,4 @@
-# Reusable release for the organization's macOS apps (handbook/release.md). NOT yet exercised: it needs the
+# Reusable release for the organization's macOS apps (handbook/types/app/release.md). NOT yet exercised: it needs the
 # `release` environment secrets listed below; run it first against a test bucket.
 #
 # Caller (in <repo>/.github/workflows/release.yml):

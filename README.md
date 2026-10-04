@@ -1,4 +1,4 @@
-<!-- template: org-README.md v1 -->
+<!-- template: org/README.md v1 -->
 # .github
 
 Organization-wide defaults for yangflow-repopro.

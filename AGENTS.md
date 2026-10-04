@@ -15,7 +15,8 @@ product repository disagree, this repository wins.
 ## Directory boundaries
 
 ```
-handbook/              rules; templates/ and playbooks/ below it
+handbook/              rules every repository follows; stacks/ (per language), types/ (per repository type),
+                       playbooks/, templates/ (common/ and one directory per type)
 .github/workflows/     reusable workflows (workflow_call), called from product repositories
 scripts/               check-docs.py, sync-labels.sh
 profile/               organization profile page

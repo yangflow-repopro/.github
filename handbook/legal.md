@@ -27,7 +27,7 @@ Third-party components · Purchases and refunds · Intellectual property · Term
 of liability · Changes. The section "Your data and credentials" is the product's slot: it says what the
 product touches on the user's behalf. Everything else is the same wording pattern in every product.
 
-A self-hosted product's `LICENSE` follows `templates/selfhosted-LICENSE`: License · Plans · Activation and
+A self-hosted product's `LICENSE` follows `handbook/templates/selfhosted/LICENSE`: License · Plans · Activation and
 verification · Your host and your data · Services you connect · Actions taken on your behalf · Hosted services ·
 Restrictions · Updates · Third-party components · Purchases and refunds · Intellectual property · Termination ·
 Disclaimer · Limitation of liability · Changes. Its product slots are "Your host and your data" (what runs and is
@@ -35,7 +35,7 @@ stored on the user's host and what never leaves it) and "Actions taken on your b
 the user's accounts and what needs approval). "Services you connect" states that the user's model providers and
 websites are used under their own terms with the user's own accounts.
 
-`/privacy` and `/refund` follow the section lists in `templates/legal.md`.
+`/privacy` and `/refund` follow the section lists in `handbook/templates/common/legal.md`.
 
 ## Wording that is always the same
 

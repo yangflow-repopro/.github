@@ -40,7 +40,7 @@ reachable from the network. On top of the rules above:
 - **Secrets at rest.** On a Mac host, credentials live in the Keychain and reach the core at start. On a Linux host,
   they live in a file in the data directory readable only by the core's user. They never appear in environment
   variables baked into the image, in the web UI in clear text after entry, or in logs.
-- **Container hardening** as in `code-standards-selfhosted.md`: non-root, read-only root filesystem, dropped
+- **Container hardening** as in `handbook/types/selfhosted/code.md`: non-root, read-only root filesystem, dropped
   capabilities, `no-new-privileges`, never the container runtime's socket.
 - **Supply chain.** Base images pinned by digest, exact dependency versions, a committed lockfile, an image
   vulnerability scan in CI and at release, an SBOM and a signature on every released image.

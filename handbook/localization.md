@@ -45,7 +45,7 @@ A self-hosted product's macOS shell uses the app codes in its own String Catalog
    `t("Signed in to {site}", { site })`. The English text is the key.
 2. Add the key to `web/src/i18n/en.json` and translate it in the other eight files. Placeholders keep their names
    and count.
-3. Error copy is keyed by the error's `code`, never by text the core sent (`code-standards-selfhosted.md`).
+3. Error copy is keyed by the error's `code`, never by text the core sent (`handbook/types/selfhosted/code.md`).
 4. Run the web UI's localization tests. They fail on a key missing from any language, a CJK value equal to the
    English, mismatched placeholders, a text node or user-visible attribute (`title`, `aria-label`, `placeholder`,
    `alt`) not passed through `t`, and a key no code uses.
@@ -68,4 +68,4 @@ A self-hosted product's macOS shell uses the app codes in its own String Catalog
 
 Strings may contain HTML; `{{root}}` in a link becomes the language's path prefix. Every language file has the
 same structure, the same HTML tags in the same order, the same link targets and placeholders as `en.json`
-(`check_i18n.py`). Legal pages carry a translation notice in every non-English language (see `legal.md`).
+(`check_i18n.py`). Legal pages carry a translation notice in every non-English language (see `handbook/legal.md`).

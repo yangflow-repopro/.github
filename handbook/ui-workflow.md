@@ -50,7 +50,7 @@ spec -> design -> review -> develop -> device acceptance -> archive
 | Identifiers | `accessibilityIdentifier` `<screen>.<element>` | `data-testid="<screen>.<element>"` |
 | Captures | Exported from the running app on a Mac: every state, light and dark | `scripts/capture-screens.mjs` against the running image: every state at the phone and desktop viewports, light and dark, named `<state>-<viewport>-<scheme>.png`; shell screens as for apps |
 | Where the maintainer accepts | On a Mac | In a desktop browser, on a real phone, and inside the macOS shell's window |
-| Automated UI checks | `scripts/ax-audit.swift` | The accessibility check in the end-to-end suite (`code-standards-selfhosted.md`) |
+| Automated UI checks | `scripts/ax-audit.swift` | The accessibility check in the end-to-end suite (`handbook/types/selfhosted/code.md`) |
 
 ## Status vocabulary
 
@@ -59,7 +59,8 @@ Anything else fails `check-docs.py`.
 
 ## The ledger
 
-The Screens table of `design/README.md` (template `design-README.md` v2) is the single source of truth:
+The Screens table of `design/README.md` (template `handbook/templates/common/design-README.md` v2) is the single
+source of truth:
 
 | Screen | Spec | Design file | Code dir | Status | Signed off | Accepted |
 |---|---|---|---|---|---|---|
@@ -109,7 +110,7 @@ brackets.
 ## Merging and CI
 
 - Checks run locally and must pass. `app`: formatter, tests, `check-docs.py`, `check-tokens.py`; hosted CI is not
-  used for macOS minutes. `selfhosted`: the `check` and `image` jobs of `code-standards-selfhosted.md` (CI) and
+  used for macOS minutes. `selfhosted`: the `check` and `image` jobs of `handbook/types/selfhosted/code.md` (CI) and
   `check-tokens.py`, run locally; a merge does not wait for hosted CI.
 - A UI code PR also needs the maintainer's device acceptance (stage 5). Documentation and fix PRs merge once the
   local checks pass.

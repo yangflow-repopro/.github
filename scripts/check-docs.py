@@ -9,8 +9,9 @@ The repository declares its type in `.repo-type` (app, selfhosted, website, libr
      "allow": ["path/glob", ...],              files exempt from the name check
      "ignore": ["path/glob", ...],             files exempt from the reference checks
      "external": ["docs/legal.md", ...],        paths that live in another repository (e.g. the app's)
-     "pending": ["docs/design.md", ...],       required documents whose template check is postponed
-                                               (temporary, with a plan entry that removes it)
+     "pending": ["docs/design.md", ...],       required documents not written yet: no template check, and
+                                               references to them are allowed (temporary, with a plan entry
+                                               that removes it)
      "design_icons": ["icon.html", ...]}       extra top-level entries allowed in design/ (icon sources)
 
 When design/README.md carries the `design-README.md v2` marker the ledger checks run (handbook/ui-workflow.md):
@@ -34,7 +35,10 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-TEMPLATES = HERE.parent / "handbook/templates"
+HANDBOOK = HERE.parent / "handbook"
+TEMPLATES = HANDBOOK / "templates"
+# A reference to a handbook file (handbook/<path>.md|json) in any document, comment or script of any repository.
+HANDBOOK_REF = re.compile(r"(?<![\w.-])handbook/([\w./<>-]*[\w>-]\.(?:md|json))")
 ROOT = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path.cwd()
 errors = []
 
@@ -86,12 +90,12 @@ def check_against(rel, template_name, text=None):
             err(rel, f"first line must carry '{tag}'")
         return
     want_marker, have_marker = marker(tmpl), marker(text)
-    if template_name == "design-README.md" and have_marker == (want_marker[0], 1):
+    if template_name == "common/design-README.md" and have_marker == (want_marker[0], 1):
         have_marker = want_marker  # v1 stays valid until the repository migrates (same H2 sections)
     if have_marker != want_marker:
         err(rel, f"first line must be '<!-- template: {want_marker[0]} v{want_marker[1]} -->' (found {have_marker})")
     have = h_lines(text, 2)
-    if template_name.startswith("CHANGELOG"):
+    if Path(template_name).name.startswith("CHANGELOG"):
         # Released versions follow Unreleased: "[X.Y.Z] - YYYY-MM-DD"
         released = [h for h in have[1:] if re.fullmatch(r"\[\d+\.\d+\.\d+\] - \d{4}-\d{2}-\d{2}", h)]
         if have[1:] != released:
@@ -221,7 +225,7 @@ def main():
 
     # 1. required documents and their templates
     pending = config.get("pending", [])
-    for rel, tname in manifest["types"][repo_type].items():
+    for rel, tname in manifest["types"][repo_type]["documents"].items():
         if rel in pending:
             continue
         if not (ROOT / rel).is_file():
@@ -248,7 +252,7 @@ def main():
             err(rel, "ADR file names are NNNN-lowercase-title.md")
             continue
         text = p.read_text(encoding="utf-8")
-        check_against(rel, "adr.md", text)
+        check_against(rel, manifest["patterns"]["docs/adr/NNNN-*.md"], text)
         h1 = h_lines(text, 1)
         if not h1 or not h1[0].startswith(m.group(1) + " "):
             err(rel, f"H1 must be '# {m.group(1)} <Title>'")
@@ -264,9 +268,9 @@ def main():
         for p in sorted(ms_dir.glob("*.md")):
             rel = str(p.relative_to(ROOT))
             if re.fullmatch(r"v\d+\.\d+-security\.md", p.name):
-                check_against(rel, "security-walkthrough.md")
+                check_against(rel, manifest["patterns"]["docs/milestones/v*-security.md"])
             elif re.fullmatch(r"v\d+\.\d+\.md|next\.md", p.name):
-                check_against(rel, manifest.get("type_patterns", {}).get(repo_type, {}).get("docs/milestones/v*.md", "milestone.md"))
+                check_against(rel, manifest["types"][repo_type]["milestone"])
             else:
                 err(rel, "milestone files are v<X.Y>.md, v<X.Y>-security.md or next.md")
 
@@ -325,6 +329,16 @@ def main():
                 if m:
                     line = text[: m.start()].count("\n") + 1
                     err(f"{rel}:{line}", f"mentions {m.group(0)!r}: documents and code describe this product only")
+        for m in HANDBOOK_REF.finditer(text):
+            if "<" not in m.group(1) and not (HANDBOOK / m.group(1)).exists():
+                line = text[: m.start()].count("\n") + 1
+                err(f"{rel}:{line}", f"reference to handbook/{m.group(1)}, which does not exist in the organization handbook")
+        if repo_type == "org" and rel.startswith("handbook/") and not rel.startswith("handbook/templates/") and rel.endswith(".md"):
+            for m in re.finditer(r"\]\(([^)#\s]+)(?:#[^)]*)?\)", text):
+                target = m.group(1)
+                if not re.match(r"[a-z]+:", target) and not ((ROOT / rel).parent / target).exists():
+                    line = text[: m.start()].count("\n") + 1
+                    err(f"{rel}:{line}", f"link to {target}, which does not exist")
         if any(fnmatch.fnmatch(rel, g) for g in ignore) or rel.startswith("CHANGELOG"):
             continue
         lines = text.split("\n")
@@ -337,8 +351,8 @@ def main():
             for m in re.finditer(r"(?<![\w/.-])((?:docs|design)/[\w./-]*[\w-]\.(?:md|html))(#[\w-]+)?", text):
                 target = ROOT / m.group(1)
                 line = text[: m.start()].count("\n") + 1
-                if m.group(1) in config.get("external", []) and not target.is_file():
-                    continue
+                if m.group(1) in config.get("external", []) + pending and not target.is_file():
+                    continue  # lives in another repository, or is a required document not written yet
                 if not target.is_file():
                     err(f"{rel}:{line}", f"reference to missing file {m.group(1)}")
                 elif m.group(2) and m.group(2)[1:] not in anchors(target.read_text(encoding="utf-8")):
