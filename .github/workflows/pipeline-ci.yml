@@ -1,0 +1,41 @@
+# Reusable CI for the organization's pipelines. See handbook/types/pipeline/code.md, "CI".
+#
+# Caller (in <repo>/.github/workflows/ci.yml):
+#   jobs:
+#     ci:
+#       uses: yangflow-repopro/.github/.github/workflows/pipeline-ci.yml@main
+#
+# Documents are checked by docs-check.yml, which the caller's docs.yml uses.
+name: Pipeline CI
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0  # the secret scan reads the whole history
+
+      # Third-party actions are pinned by commit (handbook/security.md, Pipelines).
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413  # v6.1.0; the version is the packageManager field
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+
+      - name: Secret scan of the history
+        run: python3 scripts/scan_secrets.py
