@@ -44,6 +44,7 @@
         "CHANGELOG.zh.md": "common/CHANGELOG.zh.md",
         "THIRD_PARTY.md": "selfhosted/THIRD_PARTY.md",
         "docs/spec.md": "common/spec.md",
+        "docs/architecture.md": "selfhosted/architecture.md",
         "docs/design.md": "selfhosted/design.md",
         "docs/hosting.md": "selfhosted/hosting.md",
         "docs/threat-model.md": "selfhosted/threat-model.md",
