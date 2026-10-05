@@ -9,7 +9,8 @@
 
 1. Spec: add the ledger row (`planned`) with the `docs/spec.md#anchor`.
 2. Design: for a new screen draw 2 or 3 directions as `design/screens/<screen>.direction-<x>.html`, named like
-   `web/src/screens/<screen>/`; every state at the phone and desktop viewports, light and dark. Row to `proposed`.
+   `web/src/screens/<screen>/`; every state at each viewport `docs/spec.md#information-architecture` declares, light and dark. Row to
+   `proposed`.
 3. Review: the maintainer approves in the review tool. Never pick a direction yourself. On approval rename the
    chosen file to `<screen>.html`, delete the other directions, align the documents, row to `signed-off` with the
    date.
@@ -22,8 +23,8 @@
 7. Tests: end-to-end coverage of the screen's flow and the accessibility check on every state.
 8. Captures: `node scripts/capture-screens.mjs <screen>` against the running image writes
    `design/screenshots/<screen>/<state>-<viewport>-<scheme>.png`. Before asking for acceptance, start the image
-   locally with demo data and tell the maintainer the address and which states to look at on a desktop browser, a
-   phone and the macOS shell's window.
+   locally with demo data and tell the maintainer the address and which states to look at, wherever each declared
+   viewport is used (the macOS shell's window, a desktop browser, a phone).
 9. Merge only after the accepted gate. In the same PR the row becomes `accepted` with both dates.
 
 A screen of the macOS shell itself follows `handbook/types/app/playbooks/add-screen.md`.
@@ -35,5 +36,5 @@ A screen of the macOS shell itself follows `handbook/types/app/playbooks/add-scr
 
 ## Check yourself
 
-Every state renders at `/__states/<screen>/<state>` at both viewports in both schemes; the localization tests and
+Every state renders at `/__states/<screen>/<state>` at every declared viewport in both schemes; the localization tests and
 the accessibility check pass; `python3 <org>/scripts/check-docs.py .` passes.

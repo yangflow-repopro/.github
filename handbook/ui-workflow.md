@@ -48,8 +48,8 @@ spec -> design -> review -> develop -> device acceptance -> archive
 | Screen code | `<Name>/UI/<Screen>/` | `web/src/screens/<screen>/`; native shell screens in `macos/<Name>/UI/<Screen>/` |
 | Every state renderable | A `#Preview` per state | `states.ts` per screen, rendered at `/__states/<screen>/<state>` in development builds |
 | Identifiers | `accessibilityIdentifier` `<screen>.<element>` | `data-testid="<screen>.<element>"` |
-| Captures | Exported from the running app on a Mac: every state, light and dark (`handbook/types/app/captures.md`) | `scripts/capture-screens.mjs` against the running image: every state at the phone and desktop viewports, light and dark, named `<state>-<viewport>-<scheme>.png`; shell screens as for apps |
-| Where the maintainer accepts | On a Mac | In a desktop browser, on a real phone, and inside the macOS shell's window |
+| Captures | Exported from the running app on a Mac: every state, light and dark (`handbook/types/app/captures.md`) | `scripts/capture-screens.mjs` against the running image: every state at each viewport the product declares in `docs/spec.md`, light and dark, named `<state>-<viewport>-<scheme>.png`; shell screens as for apps |
+| Where the maintainer accepts | On a Mac | Wherever each declared viewport is used: the macOS shell's window, a desktop browser, a real phone |
 | Automated UI checks | `scripts/ax-audit.swift` | The accessibility check in the end-to-end suite (`handbook/types/selfhosted/code.md`) |
 
 ## Status vocabulary
