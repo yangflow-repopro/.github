@@ -51,7 +51,9 @@ self-hosted product. Violations are bugs.
 - Raw values (colors, sizes, spacing, radii, durations, breakpoints) appear only in `web/src/design/tokens.css`.
   Components and screens use the tokens.
 - Light and dark follow the system preference, with an override in Settings.
-- Every screen works at the phone and desktop viewports defined in `docs/design.md`; touch targets meet its minimum.
+- Every screen works at each viewport the product declares in `docs/spec.md#information-architecture` (sizes in
+  `docs/design.md`); a viewport not declared yet is neither designed nor built. When a touch viewport is declared,
+  touch targets meet the minimum in `docs/design.md`.
 - The web UI is an installable PWA. It loads nothing from third parties at runtime: no fonts, scripts, styles, images
   or analytics from other origins. The core sets a strict Content Security Policy.
 - Entrance animations play on first appearance only; `prefers-reduced-motion` turns motion off.

@@ -1,5 +1,5 @@
 <!-- template: selfhosted/design.md v1 -->
-<!-- Design language of a self-hosted product: a web UI used on desktop and phone, and a native macOS shell. Thirteen H2s, fixed. 'Core symbol' and 'Native shell' are the product slots. -->
+<!-- Design language of a self-hosted product: a web UI used at the viewports the product declares, and a native macOS shell. Thirteen H2s, fixed. 'Core symbol' and 'Native shell' are the product slots. -->
 # <Name> design language
 
 ## Principles
@@ -20,7 +20,7 @@
 
 ## Layout and breakpoints
 
-<The spacing scale; the viewports every screen is designed for (phone and desktop at least) and how layouts change
+<The spacing scale; the viewports the product declares (`docs/spec.md`), their sizes and how layouts change
 between them; touch target sizes.>
 
 ## Components
