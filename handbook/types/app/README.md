@@ -15,6 +15,7 @@ Sparkle. `.repo-type` is `app`.
 |---|---|
 | [layout.md](layout.md) | Directory tree and file set |
 | [code.md](code.md) | Platform, architecture, localization, design, accessibility |
+| [captures.md](captures.md) | How device captures are made; what counts as acceptance evidence |
 | [release.md](release.md) | Versions, tags, changelog, release pipeline, launch checklist |
 | [playbooks/](playbooks/add-screen.md) | Add a screen, a string, a language; bump a dependency; release |
 

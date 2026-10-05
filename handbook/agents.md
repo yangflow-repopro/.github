@@ -27,3 +27,11 @@ These rules hold in every repository. A repository's `AGENTS.md` adds only what 
    (the review tool writes them to `.design-review/decisions.jsonl`). Develop one screen at a time. When spec,
    design and code disagree, stop and ask. Update the ledger in the same PR as the change it records.
 9. **Product names stay in the product's repository.** In handbook, templates and shared code use `<Name>`.
+10. **Never change the maintainer's saved settings.** While testing or capturing, set behaviour with launch
+    arguments or environment variables only. If a saved default was touched, say so and restore the exact value
+    read beforehand. Tests do not depend on the machine's saved settings: pin language, locale and time zone in the
+    test host.
+11. **Worktree hygiene.** Work in your own git worktree under the shared parent directory. Never remove a worktree
+    that has unmerged work. Never `git add -A`.
+12. **Do not fake what the environment forbids.** If a step cannot be done (locked screen, missing permission), stop
+    and report. Do not produce a substitute artefact.
