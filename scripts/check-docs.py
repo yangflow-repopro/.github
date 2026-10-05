@@ -3,7 +3,7 @@
 
     python3 check-docs.py [repo-root]
 
-The repository declares its type in `.repo-type` (app, selfhosted, website, library, template, org). Optional
+The repository declares its type in `.repo-type` (app, selfhosted, pipeline, website, library, template, org). Optional
 `.docs-check.json`:
     {"forbidden": ["other-product", ...],      names that must not appear anywhere (case-insensitive)
      "allow": ["path/glob", ...],              files exempt from the name check
@@ -370,7 +370,10 @@ def pr_checks():
     code = [f for f in changed if not f.startswith(("docs/", "scripts/", ".github/", "design/", ".claude/", ".codex/")) and "Tests/" not in f
             and "/test/" not in f and ".test." not in f
             and not f.endswith((".md", ".json", ".xcodeproj/project.pbxproj", ".yml"))]
-    if re.match(r"(feat|fix)(\(|:|!)", title) and code and "no-changelog" not in labels and "CHANGELOG.md" not in changed:
+    type_file = ROOT / ".repo-type"
+    manifest = json.loads((TEMPLATES / "manifest.json").read_text())
+    documents = manifest["types"].get(type_file.read_text().strip() if type_file.is_file() else "", {}).get("documents", {})
+    if "CHANGELOG.md" in documents and re.match(r"(feat|fix)(\(|:|!)", title) and code and "no-changelog" not in labels and "CHANGELOG.md" not in changed:
         err("CHANGELOG.md", "a feat/fix PR that changes product code must add a line under [Unreleased] (or label the PR no-changelog)")
     if (ROOT / "design/screens").is_dir() and "design-unchanged" not in labels:
         type_file = ROOT / ".repo-type"
