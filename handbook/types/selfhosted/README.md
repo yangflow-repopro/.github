@@ -24,8 +24,8 @@ The pages every repository follows are listed in [the handbook index](../../READ
 
 ## Templates
 
-`handbook/templates/selfhosted/` (README, design language, milestone, third-party table, terms of service, hosting,
-threat model) and the shared ones in `handbook/templates/common/`; `handbook/templates/manifest.json` maps each
+`handbook/templates/selfhosted/` (README, architecture, design language, milestone, third-party table, terms of
+service, hosting, threat model) and the shared ones in `handbook/templates/common/`; `handbook/templates/manifest.json` maps each
 required document to its template.
 
 ## Workflows

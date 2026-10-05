@@ -16,6 +16,7 @@ Each document answers one question. The template column names the template in `h
 | `AGENTS.md` | What must an AI collaborator know before changing anything | `AGENTS.md` |
 | `CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md` | (pointers) | one line: `@AGENTS.md` |
 | `docs/spec.md` | What to build and what not; data, modules, flows, acceptance | `spec.md` |
+| `docs/architecture.md` | How a self-hosted product's parts fit: layers, boundaries, extension points, data flow, privacy | `selfhosted/architecture.md` |
 | `docs/design.md` | The design language: tokens, components, motion, copy tone, accessibility | `<type>/design.md` |
 | `design/README.md` | How to read the mockups; the ledger of screens and their status (`handbook/ui-workflow.md`) | `design-README.md` |
 | `docs/roadmap.md` | The order of work after the baseline | `roadmap.md` |
@@ -42,7 +43,7 @@ is described in `handbook/types/<type>/README.md`.
 | Type | What it is | Templates of its own (`handbook/templates/<type>/`) |
 |---|---|---|
 | `app` | A native macOS app distributed as a notarized download | README, design, THIRD_PARTY, LICENSE |
-| `selfhosted` | A product the user runs on their own host: a container image with a web UI, run by a native macOS shell on Macs and by Docker Compose on Linux | README, design, milestone, THIRD_PARTY, LICENSE, hosting, threat-model |
+| `selfhosted` | A product the user runs on their own host: a container image with a web UI, run by a native macOS shell on Macs and by Docker Compose on Linux | README, architecture, design, milestone, THIRD_PARTY, LICENSE, hosting, threat-model |
 | `website` | A product's static website | README, design, content, THIRD_PARTY |
 | `library` | Shared code or tooling used by other repositories | README, design |
 | `template` | A repository other repositories are created from | README |
