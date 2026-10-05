@@ -1,7 +1,7 @@
 # UI workflow
 
 How a screen goes from an idea to an accepted, shipped view. It applies to every repository with a UI (`app` and
-`selfhosted`); a repository's
+`selfhosted`; a `pipeline` has no UI and skips it); a repository's
 `docs/process.md` records only differences. `scripts/check-docs.py` and `scripts/design-review.py` enforce and
 support it.
 

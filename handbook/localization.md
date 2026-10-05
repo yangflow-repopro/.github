@@ -18,6 +18,9 @@ Apps, self-hosted products and websites ship the same nine languages. The langua
 
 A self-hosted product's macOS shell uses the app codes in its own String Catalog.
 
+A pipeline has no UI copy. The languages of the content it generates are listed per product in the pipeline's
+configuration, with the app codes.
+
 ## Rules
 
 - **English is the source and the only reference.** Translators and AI translate from English. Chinese is not
