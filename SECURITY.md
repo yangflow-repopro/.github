@@ -2,19 +2,23 @@
 
 ## Reporting a vulnerability
 
-Please do not open a public issue. Email the product's support address (it is in the footer of the product's
-website and in the product repository's `SECURITY.md`) with "Security" in the subject.
+Please do not open a public issue. Email the affected project's support address, listed in its
+`SECURITY.md` or on its website, with "Security" in the subject.
 
-Include what you found, how to reproduce it and the app version and build. You will get an
+Include what you found, how to reproduce it, the project version or commit and the relevant environment.
+Do not include credentials, private host details or customer data. You will get an
 acknowledgement within 3 business days and a fix or a status update within 14 days. Please give us
 that time before disclosing publicly.
 
 ## Scope
 
-The macOS apps, their update feeds and the product websites. Credentials are stored only in the
-user's Keychain; if you find any path by which a credential reaches a file, a log or the network
-unencrypted, that is in scope.
+Desktop applications, self-hosted services, automation pipelines, shared libraries and tooling,
+product websites, and their build, distribution and update infrastructure.
+
+Credential exposure, unauthorized access and failures at trust boundaries are in scope.
+Specific credential stores and runtime protections are documented per project.
 
 ## Supported versions
 
-Only the latest release of each app receives fixes.
+The latest release of each versioned project receives security fixes. For projects without tagged releases,
+the maintained deployment or main revision is supported.

@@ -13,3 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: python3 scripts/check-docs.py .
+      - name: Test the documentation checker
+        run: python3 scripts/test_check_docs.py
+      - name: Test the design review tool
+        run: python3 scripts/test_design_review.py
