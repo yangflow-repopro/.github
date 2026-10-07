@@ -20,7 +20,7 @@ Deployment target macOS 26.0 unless an ADR says otherwise.
 
 - User-visible text is an English literal that is also the String Catalog key: `String.loc("Publish")`.
   Translations live in `Resources/Localizable.xcstrings`.
-- UI languages are the nine in `handbook/localization.md`, switchable in Settings and applied without restart. Every
+- UI languages are the nine in `handbook/guides/localization.md`, switchable in Settings and applied without restart. Every
   key carries every language; unit tests enforce it.
 - UI copy keeps one necessary sentence and never uses infrastructure terms the user did not choose.
 

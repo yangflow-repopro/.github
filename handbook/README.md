@@ -1,21 +1,26 @@
 # Handbook
 
-The single source of truth for how yangflow-repopro projects are built and shipped. Product repositories link here
-and record only their differences. It has three layers: rules every repository follows, rules per language, and rules
-per repository type.
+Start with the mandatory core, then read only the guides, stacks and type preset that fit the project.
+Project decisions specify actual components and may override presets; core security and maintainer approval remain mandatory.
 
 ## Every repository
 
 | File | Covers |
 |---|---|
-| [process.md](process.md) | Roles, milestones, branches, commits, PRs, issues, labels, Definition of Done |
-| [docs.md](docs.md) | The documentation system: map, repository types, rules, names, lifecycle |
-| [agents.md](agents.md) | Working rules for AI collaborators |
-| [ui-workflow.md](ui-workflow.md) | Screen lifecycle, gates, ledger, `design/` whitelist, review tool, merge rule |
-| [localization.md](localization.md) | Languages, adding a string, adding a language |
-| [security.md](security.md) | Red lines, walkthroughs, scanning |
-| [legal.md](legal.md) | Legal pages: one source per fact, skeletons, fixed wording |
-| [playbooks/](playbooks/add-feature.md) | Add a feature, write an ADR |
+| [core/process.md](core/process.md) | Collaboration, branches, commits, review and acceptance |
+| [core/docs.md](core/docs.md) | Required documents, project sections and explicit version migrations |
+| [core/agents.md](core/agents.md) | AI collaborators and maintainer authority |
+| [core/security.md](core/security.md) | Credential protection, trust boundaries and external actions |
+
+## Read when applicable
+
+| Guide | Applies when |
+|---|---|
+| [guides/ui-workflow.md](guides/ui-workflow.md) | A product has interactive screens |
+| [guides/localization.md](guides/localization.md) | A project translates UI or generated content |
+| [guides/security.md](guides/security.md) | Runtime security, credentials, network services or publishing are involved |
+| [guides/legal.md](guides/legal.md) | A commercial product uses the terms-of-service preset |
+| [playbooks/](playbooks/add-feature.md) | Adding a feature or recording a decision |
 
 ## Languages
 
@@ -46,4 +51,5 @@ Each type has a directory with the same index (`README.md`: what it is, stacks, 
 [templates/](templates/manifest.json): `common/` for documents every type shares, one directory per type for the
 rest; `manifest.json` says which repository type needs which document from which template.
 
-Changing a rule: open a PR here, link it from the product PR that needs it.
+Changing a rule: open a PR here, then migrate consumers in separate PRs with a pinned handbook revision.
+Old root-level guide paths remain compatibility entry points, including their heading anchors.

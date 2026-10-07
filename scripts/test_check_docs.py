@@ -325,12 +325,12 @@ class DocumentStructureTest(unittest.TestCase):
 class HandbookTest(unittest.TestCase):
     def test_reference_to_missing_handbook_file(self):
         gone = "handbook/" + "no-such-page.md"  # split so this file does not reference it itself
-        tmp, root = make(files={"AGENTS.md": f"See `{gone}` and `handbook/agents.md`.\n"})
+        tmp, root = make(files={"AGENTS.md": f"See `{gone}` and `handbook/core/agents.md`.\n"})
         with tmp:
             code, out = run(root)
         self.assertEqual(code, 1)
         self.assertIn(f"AGENTS.md:1: reference to {gone}", out)
-        self.assertNotIn("handbook/agents.md,", out)
+        self.assertNotIn("handbook/core/agents.md,", out)
 
     def test_reference_to_pending_document_is_allowed(self):
         tmp, root = make(files={"docs/roadmap.md": "Writes `docs/legal.md` after pricing.\n"})

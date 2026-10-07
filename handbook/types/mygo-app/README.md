@@ -1,5 +1,8 @@
 # Repository type: mygo-app
 
+This is the native Go desktop documentation preset. Select only the stacks and components the project uses;
+record its actual architecture and preset differences in its agent instructions and process document.
+
 ## What it is
 
 A closed-source desktop app written in Go with MyGo native UI. There is no HTML frontend,

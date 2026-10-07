@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local design review server (handbook/ui-workflow.md). Standard library only.
+"""Local design review server (handbook/guides/ui-workflow.md). Standard library only.
 
     python3 design-review.py <product-repo> [--port 8800]
     python3 design-review.py <product-repo> --check      render every page once, print a summary, exit

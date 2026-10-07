@@ -1,5 +1,8 @@
 # Repository type: template
 
+This is the repository template documentation preset. Select only the stacks and components the project uses;
+record its actual architecture and preset differences in its agent instructions and process document.
+
 ## What it is
 
 A GitHub template repository that new repositories of another type are created from. It carries that type's code,

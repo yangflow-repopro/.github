@@ -16,4 +16,4 @@ A string in the macOS shell follows `handbook/types/app/playbooks/add-string.md`
 
 ## Check yourself
 
-The localization tests pass (`handbook/localization.md`, Add a string (self-hosted web UI)).
+The localization tests pass (`handbook/guides/localization.md`, Add a string (self-hosted web UI)).

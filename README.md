@@ -7,9 +7,9 @@ Organization-wide defaults for yangflow-repopro.
 
 | Path | Purpose |
 |---|---|
-| `handbook/` | How projects are built and shipped; product repositories link here |
+| `handbook/` | Mandatory `core/`, conditional `guides/`, language `stacks/` and repository `types/` |
 | `handbook/templates/` | Templates for every kind of document, and `manifest.json` (which repository type needs which) |
-| `.github/workflows/` | Reusable workflows: `macos-ci.yml`, `macos-release.yml`, `site-ci.yml` |
+| `.github/workflows/` | Reusable workflows for macOS, MyGo, websites, pipelines and document checks |
 | `pull_request_template.md`, `ISSUE_TEMPLATE/` | Defaults for every repository that has none of its own |
 | `SECURITY.md` | Vulnerability reporting |
 | `labels.yml`, `scripts/sync-labels.sh` | Shared labels and the script that applies them |

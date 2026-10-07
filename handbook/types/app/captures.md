@@ -1,7 +1,7 @@
 # App captures
 
 How the images in `design/screenshots/<screen>/` are made and what the maintainer may accept. Stage 5 of
-`handbook/ui-workflow.md` refers here.
+`handbook/guides/ui-workflow.md` refers here.
 
 ## Acceptance evidence
 
@@ -9,7 +9,7 @@ How the images in `design/screenshots/<screen>/` are made and what the maintaine
 |---|---|
 | The window server's compositor output of the real window: `screencapture -x -o -l <CGWindowID>` | Yes. This is the default |
 | `NSView.cacheDisplay`, SwiftUI `ImageRenderer`, any render of the view tree | **Never.** They bypass the compositor and lose glass, vibrancy, system control chrome and selected-state fills, so the colours differ from the running app |
-| Renders of the design files | Never (`handbook/ui-workflow.md`, Screenshots) |
+| Renders of the design files | Never (`handbook/guides/ui-workflow.md`, Screenshots) |
 
 A degraded method may exist for machines that cannot run the default. It prints a loud warning, writes outside the
 repository and its output is never committed.
@@ -45,4 +45,4 @@ Requirements on the machine:
   reproducible and nothing real is touched.
 - A Release build contains no capture code and no demo scenario. Verify with `strings` and `nm` on the Release
   binary before a release.
-- Capturing never changes the maintainer's saved settings (`handbook/agents.md`, rule 10).
+- Capturing never changes the maintainer's saved settings (`handbook/core/agents.md`, rule 10).

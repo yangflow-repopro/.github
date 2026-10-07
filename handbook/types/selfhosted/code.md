@@ -1,5 +1,8 @@
 # Code (self-hosted products)
 
+Apply each section only to components shipped by this project. Its documented architecture and release
+contract decide whether it uses a container, a native shell, an agent or a separate client.
+
 The core, `shared/`, the web UI and services follow `handbook/stacks/typescript.md`; the macOS shell follows
 `handbook/stacks/swift.md`; scripts follow `handbook/stacks/python.md`. This page adds what is specific to a
 self-hosted product. Violations are bugs.
@@ -60,7 +63,7 @@ self-hosted product. Violations are bugs.
 
 ## Localization
 
-`handbook/localization.md` covers languages, the English source and the rules. In code: user-visible text is the
+`handbook/guides/localization.md` covers languages, the English source and the rules. In code: user-visible text is the
 English literal passed to `t("…")`, which is also the key in `web/src/i18n/<code>.json`.
 
 ## Accessibility

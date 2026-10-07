@@ -1,13 +1,13 @@
 # Add a language
 
-See `handbook/localization.md`, "Add a language". Steps in order:
+See `handbook/guides/localization.md`, "Add a language". Steps in order:
 
 1. App: add to the String Catalog (all keys), to the language type (`AppLanguage`), to the catalog test's
    language list.
 2. Website: `i18n/languages.json`, `i18n/<code>.json` translated from English, screenshots if the site has a
    carousel.
 3. `scripts/sitekit/check_i18n.py`, `scripts/build.py`, `scripts/sitekit/check_site.py`.
-4. Update the language table in `handbook/localization.md`.
+4. Update the language table in `handbook/guides/localization.md`.
 
 ## Files this touches
 

@@ -1,5 +1,8 @@
 # Repository type: pipeline
 
+This is the maintainer-operated automation documentation preset. Select only the stacks and components the project uses;
+record its actual architecture and preset differences in its agent instructions and process document.
+
 ## What it is
 
 An automated pipeline the maintainer operates: a TypeScript command-line tool and the GitHub workflows that run it. It
@@ -21,7 +24,7 @@ maintainer's accounts. It has no UI of its own and is not distributed to users. 
 | [playbooks/](playbooks/bump-dependency.md) | Bump a dependency |
 
 The pages every repository follows are listed in [the handbook index](../../README.md). A pipeline has no UI, so
-`handbook/ui-workflow.md` does not apply and the repository has no `design/` and no `docs/design.md`.
+`handbook/guides/ui-workflow.md` does not apply and the repository has no `design/` and no `docs/design.md`.
 
 ## Templates
 

@@ -17,7 +17,7 @@
 - [ ] CI is green (format, build, tests)
 - [ ] Design acceptance checklist (`docs/design.md`) ticked against the signed-off mockups (UI PRs)
 - [ ] Docs updated where behaviour changed (spec / design / ADR / CHANGELOG)
-- [ ] No magic numbers; all user-visible copy is in the String Catalog with every language
+- [ ] No magic numbers; user-visible copy uses the project's localization system and declared languages
 - [ ] Security walkthrough recorded below (credentials, Keychain, network with credentials, launch agent, signing)
 
 ## Known limitations
