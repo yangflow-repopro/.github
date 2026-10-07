@@ -22,5 +22,5 @@ body:
   - type: input
     id: version
     attributes:
-      label: App version and build, macOS version
-      placeholder: "1.0.0 (12) · macOS 26.1"
+      label: Project version or commit and environment
+      placeholder: "1.0.0 / commit SHA · OS, browser or runtime version"
