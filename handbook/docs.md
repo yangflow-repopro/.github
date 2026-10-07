@@ -43,6 +43,7 @@ is described in `handbook/types/<type>/README.md`.
 
 | Type | What it is | Templates of its own (`handbook/templates/<type>/`) |
 |---|---|---|
+| `mygo-app` | A Go desktop app with MyGo native UI | README, design, THIRD_PARTY, LICENSE |
 | `app` | A native macOS app distributed as a notarized download | README, design, THIRD_PARTY, LICENSE |
 | `selfhosted` | A product the user runs on their own host: a container image with a web UI, run by a native macOS shell on Macs and by Docker Compose on Linux | README, architecture, design, milestone, THIRD_PARTY, LICENSE, hosting, threat-model |
 | `pipeline` | A TypeScript command-line tool and the workflows that run it, acting with the maintainer's accounts; no UI, not distributed | README, spec, operations, threat-model, milestone, THIRD_PARTY |

@@ -122,6 +122,61 @@ class Test(unittest.TestCase):
 
 
 
+class MyGoTest(unittest.TestCase):
+    def fixture(self, files=None):
+        tmp, root = make(repo_type="template", files=files)
+        (root / ".repo-type").write_text("mygo-app\n")
+        cfg = json.loads((root / ".docs-check.json").read_text())
+        cfg["pending"] = list(MANIFEST["types"].get("mygo-app", MANIFEST["types"]["app"])["documents"])
+        (root / ".docs-check.json").write_text(json.dumps(cfg))
+        git(root, "add", ".repo-type", ".docs-check.json")
+        return tmp, root
+
+    def test_type_is_supported(self):
+        tmp, root = self.fixture()
+        with tmp:
+            self.assertEqual(run(root), (0, "docs ok\n"))
+
+    def test_go_notice_version(self):
+        tmp, root = self.fixture({
+            "go.mod": "module example.org/app\n\ngo 1.27.1\nrequire github.com/egoist/mygo v0.2.16\n",
+            "THIRD_PARTY.md": "| github.com/egoist/mygo | v0.2.15 | MIT |\n",
+        })
+        with tmp:
+            code, out = run(root)
+        self.assertEqual(code, 1)
+        self.assertIn("github.com/egoist/mygo is v0.2.16", out)
+
+    def test_go_notice_missing(self):
+        tmp, root = self.fixture({
+            "go.mod": "module example.org/app\n\ngo 1.27.1\nrequire (\n github.com/egoist/mygo v0.2.16\n)\n",
+            "THIRD_PARTY.md": "# Third-party\n",
+        })
+        with tmp:
+            code, out = run(root)
+        self.assertEqual(code, 1)
+        self.assertIn("github.com/egoist/mygo is in go.mod but has no row", out)
+
+    def test_go_sources_are_scanned(self):
+        tmp, root = self.fixture({"main.go": "// handbook/" "stacks/unknown.md\npackage main\n"})
+        with tmp:
+            code, out = run(root)
+        self.assertEqual(code, 1)
+        self.assertIn("reference to handbook/" "stacks/unknown.md", out)
+
+    def test_go_screen_change_requires_design(self):
+        tmp, root = self.fixture({"internal/ui/example/view.go": "package example\n"})
+        with tmp:
+            git(root, "commit", "-qm", "base")
+            git(root, "branch", "base")
+            (root / "internal/ui/example/view.go").write_text("package example\n// changed\n")
+            git(root, "add", "internal/ui/example/view.go")
+            git(root, "commit", "-qm", "change")
+            code, out = run(root, {"PR_BASE": "base", "PR_TITLE": "refactor: example"})
+        self.assertEqual(code, 1)
+        self.assertIn("UI code changed", out)
+
+
 class SelfhostedTest(unittest.TestCase):
     def check(self, **kw):
         tmp, root = make(repo_type="selfhosted", **kw)

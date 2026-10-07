@@ -3,7 +3,7 @@
 
     python3 check-docs.py [repo-root]
 
-The repository declares its type in `.repo-type` (app, selfhosted, pipeline, website, library, template, org). Optional
+The repository declares its type in `.repo-type` (app, mygo-app, selfhosted, pipeline, website, library, template, org). Optional
 `.docs-check.json`:
     {"forbidden": ["other-product", ...],      names that must not appear anywhere (case-insensitive)
      "allow": ["path/glob", ...],              files exempt from the name check
@@ -105,10 +105,11 @@ def check_against(rel, template_name, text=None):
         err(rel, f"H2 sections differ from template {template_name}: expected {h_lines(tmpl, 2)}, found {have}")
 
 
-TEXT_SUFFIXES = {".md", ".swift", ".py", ".sh", ".yml", ".yaml", ".html", ".js", ".json", ".mjs", ".plist", ".txt",
+TEXT_SUFFIXES = {".md", ".swift", ".go", ".mod", ".py", ".sh", ".yml", ".yaml", ".html", ".js", ".json", ".mjs", ".plist", ".txt",
                  ".xcstrings", ".ts", ".tsx", ".mts", ".css"}
 # Where a repository type keeps screen code (handbook/ui-workflow.md); a change there must change design/screens/.
 SCREEN_CODE = {
+    "mygo-app": r"^internal/ui/[^/]+/.+\.go$",
     "selfhosted": r"^web/src/screens/[^/]+/.+\.(?:ts|tsx|css)$|(^|/)UI/[^/]+/.+\.swift$",
 }
 DEFAULT_SCREEN_CODE = r"(^|/)UI/[^/]+/.+\.swift$"
@@ -306,6 +307,26 @@ def main():
                         err("THIRD_PARTY.md", f"{name} is in {f} but has no row")
                     elif spec not in row[1]:
                         err("THIRD_PARTY.md", f"{name} is {spec} in {f} but the row says {row[1]!r}")
+
+    # Go modules, including indirect modules, must have exact license inventory rows.
+    gomod = ROOT / "go.mod"
+    if gomod.is_file():
+        content = gomod.read_text()
+        requirements = re.findall(r"^require[ \t]+([^\n(]+)", content, re.M)
+        requirements += [line for block in re.findall(r"^require[ \t]*\((.*?)^\)", content, re.M | re.S)
+                         for line in block.splitlines()]
+        rows = [[c.strip().strip("`") for c in line.strip().strip("|").split("|")]
+                for line in third.read_text().splitlines() if line.startswith("|")] if third.is_file() else []
+        for line in requirements:
+            fields = line.split("//", 1)[0].split()
+            if len(fields) != 2:
+                continue
+            name, version = fields
+            row = next((r for r in rows if len(r) > 1 and r[0] == name), None)
+            if row is None:
+                err("THIRD_PARTY.md", f"{name} is in go.mod but has no row")
+            elif row[1] != version:
+                err("THIRD_PARTY.md", f"{name} is {version} in go.mod but the row says {row[1]!r}")
 
     # 4. text scans: other products' names, ordinal references, references that must resolve
     files = [Path(f) for f in subprocess.run(["git", "-C", str(ROOT), "ls-files"], capture_output=True, text=True).stdout.split("\n") if f]

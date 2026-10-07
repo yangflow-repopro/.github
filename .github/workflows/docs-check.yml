@@ -8,6 +8,12 @@ name: Docs check
 
 on:
   workflow_call:
+    inputs:
+      handbook-ref:
+        description: Organization handbook revision, pinned alongside the caller's reusable workflow
+        type: string
+        default: main
+        required: false
 
 jobs:
   check-docs:
@@ -21,6 +27,7 @@ jobs:
       - uses: actions/checkout@v5
         with:
           repository: yangflow-repopro/.github
+          ref: ${{ inputs.handbook-ref }}
           path: .org
       - name: Check documents
         env:
