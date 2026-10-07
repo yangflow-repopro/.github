@@ -29,3 +29,4 @@ The shared document sections and design language skeleton are mapped in
 
 `mygo-ci.yml` and `docs-check.yml`. Packaging produces local or CI artifacts; publishing
 and credentials are configured per product after maintainer approval.
+Pin callers to one organization commit and pass that same SHA as `handbook-ref` to the docs workflow.
