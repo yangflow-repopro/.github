@@ -2,6 +2,11 @@ name: Bug
 description: Something does not behave as the spec or design says
 labels: ["fix"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Report vulnerabilities through the project's SECURITY.md instead of this public form.
+        Do not include credentials, private host details or customer data.
   - type: textarea
     id: what
     attributes:
@@ -13,7 +18,7 @@ body:
     id: expected
     attributes:
       label: What should happen
-      description: Quote the spec or design section if there is one.
+      description: Describe the expected behavior and link its spec, design, API or documented contract when available.
   - type: textarea
     id: steps
     attributes:
@@ -22,5 +27,17 @@ body:
   - type: input
     id: version
     attributes:
-      label: Project version or commit and environment
+      label: Version/build and environment
+      description: Include only relevant server, agent, client, OS/architecture, browser or runtime versions.
       placeholder: "1.0.0 / commit SHA · OS, browser or runtime version"
+  - type: dropdown
+    id: evidence
+    attributes:
+      label: Evidence status
+      description: Select the strongest evidence available. A static hypothesis is not a reproduced bug.
+      options:
+        - Reproduced with recorded steps
+        - Observed but not yet reproduced
+        - Static hypothesis, not yet measured
+    validations:
+      required: false

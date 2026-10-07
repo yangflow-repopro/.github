@@ -1,6 +1,11 @@
 name: Task
 description: A unit of work under a milestone tracking issue
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Implementation tasks follow the milestone spec step. A proposed tracking issue does not approve scope.
+        Do not include credentials, private host details or customer data; follow the project's SECURITY.md.
   - type: input
     id: parent
     attributes:
@@ -22,3 +27,24 @@ body:
       description: Checklist the PR must satisfy.
       value: |
         - [ ] 
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Blocking dependencies
+      description: Link only work that actually blocks this task. Use native relationships when available; None is valid.
+    validations:
+      required: false
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification and manual acceptance
+      description: Give exact commands, expected results and any manual acceptance steps relevant to this task.
+    validations:
+      required: false
+  - type: textarea
+    id: impact
+    attributes:
+      label: Data, configuration, protocol and rollback impact
+      description: Describe affected data/configuration or wire contracts and how to roll back. None is valid.
+    validations:
+      required: false
