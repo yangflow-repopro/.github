@@ -101,8 +101,10 @@ def check_against(rel, template_name, text=None):
         if have[1:] != released:
             err(rel, "sections after [Unreleased] must be '[X.Y.Z] - YYYY-MM-DD'")
         have = have[:1]
-    if h_lines(tmpl, 2) != have:
-        err(rel, f"H2 sections differ from template {template_name}: expected {h_lines(tmpl, 2)}, found {have}")
+    required = h_lines(tmpl, 2)
+    if [h for h in have if h in required] != required:
+        err(rel, f"required H2 sections must appear once in template order {template_name}: "
+                 f"expected {required}, found {have}")
 
 
 TEXT_SUFFIXES = {".md", ".swift", ".go", ".mod", ".py", ".sh", ".yml", ".yaml", ".html", ".js", ".json", ".mjs", ".plist", ".txt",

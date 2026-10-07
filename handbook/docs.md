@@ -60,11 +60,15 @@ a type's pages, so every type that uses the language shares them.
 ## Rules
 
 1. **One template per kind of document.** A product document fills the template; it does not change the
-   skeleton. Every H2 of the template is required, in the template's order. A section with nothing to say
-   says `None`; it is not deleted.
+   skeleton. Every H2 of the template is required exactly once, in the template's order.
+   A project may add sections between them. A required section with nothing to say says `None`; it is not deleted.
+   Changelogs and legal license section lists keep their dedicated strict checks.
 2. **The first line is the template marker**, `<!-- template: <name> v<N> -->`, copied from the template. When
    the template changes, its version number goes up and every document using it is rewritten from the new
-   template; the check fails until it is.
+   template as an explicit migration; the check fails until it is.
+   Pin the reusable docs workflow and its `handbook-ref` input to the same organization commit SHA.
+   The checker, manifest and templates then come from one revision; changes on `main` do not silently migrate a project.
+   Unpinned callers remain supported during migration. Upgrade the SHA, documents and references together in a PR.
 3. **Rewrite, do not patch.** A document that no longer matches its template is rewritten from the template,
    moving the content over, not edited in place into shape.
 4. **Headings are stable names, not numbers.** Other documents and code link to

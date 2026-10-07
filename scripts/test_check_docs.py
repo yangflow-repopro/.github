@@ -280,6 +280,48 @@ class PipelineTest(unittest.TestCase):
                 self.assertEqual(code, expected, (repo_type, out))
 
 
+class DocumentStructureTest(unittest.TestCase):
+    def check_readme(self, text):
+        docs = MANIFEST["types"]["pipeline"]["documents"]
+        tmp, root = make(repo_type="pipeline", files={"README.md": text},
+                         config={"pending": [r for r in docs if r != "README.md"]})
+        with tmp:
+            return run(root)
+
+    def test_project_sections_can_extend_template(self):
+        text = template("pipeline/README.md").replace("## Status", "## Project context\n\nDetails.\n\n## Status")
+        self.assertEqual(self.check_readme(text), (0, "docs ok\n"))
+
+    def test_required_section_cannot_be_removed(self):
+        text = template("pipeline/README.md").replace("## Status", "## Project context")
+        code, out = self.check_readme(text)
+        self.assertEqual(code, 1, out)
+        self.assertIn("required H2 sections", out)
+
+    def test_required_sections_keep_their_order(self):
+        text = template("pipeline/README.md")
+        headings = re.findall(r"^## (.+)$", text, re.M)
+        text = text.replace("## " + headings[0], "## swap", 1)
+        text = text.replace("## " + headings[1], "## " + headings[0], 1)
+        text = text.replace("## swap", "## " + headings[1], 1)
+        self.assertEqual(self.check_readme(text)[0], 1)
+
+    def test_required_section_cannot_be_duplicated(self):
+        text = template("pipeline/README.md") + "\n## Status\n\nDuplicate.\n"
+        self.assertEqual(self.check_readme(text)[0], 1)
+
+    def test_template_version_still_must_match(self):
+        text = template("pipeline/README.md").replace(" v1 -->", " v999 -->", 1)
+        self.assertEqual(self.check_readme(text)[0], 1)
+
+    def test_changelog_extra_section_is_rejected(self):
+        docs = MANIFEST["types"]["app"]["documents"]
+        tmp, root = make(files={"CHANGELOG.md": template("common/CHANGELOG.md") + "\n## Notes\n"},
+                         config={"pending": [r for r in docs if r != "CHANGELOG.md"]})
+        with tmp:
+            self.assertEqual(run(root)[0], 1)
+
+
 class HandbookTest(unittest.TestCase):
     def test_reference_to_missing_handbook_file(self):
         gone = "handbook/" + "no-such-page.md"  # split so this file does not reference it itself
