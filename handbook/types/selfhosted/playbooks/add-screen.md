@@ -3,7 +3,7 @@
 ## Before you start
 
 - The feature is in `docs/milestones/next.md` and its section in `docs/spec.md` names the screen. Read
-  `handbook/ui-workflow.md`: the steps below are its stages, and the gates are the maintainer's.
+  `handbook/guides/ui-workflow.md`: the steps below are its stages, and the gates are the maintainer's.
 
 ## Steps
 

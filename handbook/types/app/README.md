@@ -1,5 +1,8 @@
 # Repository type: app
 
+This is the native Swift macOS documentation preset. Select only the stacks and components the project uses;
+record its actual architecture and preset differences in its agent instructions and process document.
+
 ## What it is
 
 A native macOS app, closed source, distributed as a notarized download from its website and updated in-app with

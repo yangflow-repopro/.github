@@ -39,7 +39,7 @@ Applies to every Swift code base in the organization, whatever the repository ty
 - Swift Testing (`@Test`, `#expect`). Service-level code covers at least the happy path and one error path. Test
   doubles are `private` to the test file; mocks are not shared across test files.
 - No XCUITest. UI quality relies on all-state previews, screenshots on every UI PR and the maintainer's acceptance
-  (`handbook/ui-workflow.md`).
+  (`handbook/guides/ui-workflow.md`).
 - Tests run with `-testLanguage en -testRegion US`; assert English text or pass an explicit locale.
 - Live integration tests are opt-in through environment variables and skipped in CI.
 - Tests that need real sockets, a local HTTP server or WebKit carry

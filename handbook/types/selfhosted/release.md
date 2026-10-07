@@ -1,5 +1,8 @@
 # Releases (self-hosted products)
 
+Apply each section only to components shipped by this project. Its documented architecture and release
+contract decide whether it uses a container, a native shell, an agent or a separate client.
+
 A self-hosted product ships two things that always carry the same version: a container image and a macOS app that
 runs it. The image is published to a public registry so any host can pull it without an account; the app is
 notarized and updated with Sparkle 2 like every macOS app (`handbook/types/app/release.md`). Downloads, feeds and

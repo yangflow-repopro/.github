@@ -1,5 +1,8 @@
 # Repository type: library
 
+This is the shared library or tool documentation preset. Select only the stacks and components the project uses;
+record its actual architecture and preset differences in its agent instructions and process document.
+
 ## What it is
 
 Shared code or tooling other repositories use, for example a generator vendored into product repositories.

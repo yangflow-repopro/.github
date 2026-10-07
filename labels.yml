@@ -1,5 +1,5 @@
 # Shared labels for every repository in the organization. Apply with scripts/sync-labels.sh.
-# Type labels mirror commit types (handbook/process.md). Scope labels are per repository and are
+# Type labels mirror commit types (handbook/core/process.md). Scope labels are per repository and are
 # never created or removed by the sync.
 - name: feat
   color: "1D76DB"

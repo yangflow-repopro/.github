@@ -34,7 +34,7 @@ The shared CI workflow only tests and builds. The template's manual packaging wo
 with read-only repository permissions and no upload, signing secrets or release publication.
 `scripts/release.sh` deliberately has no publishing command. Product-specific signing and publication
 are added after maintainer approval and verified against a test destination. A reusable release workflow
-must be exercised on a product branch before merge (`handbook/agents.md`).
+must be exercised on a product branch before merge (`handbook/core/agents.md`).
 
 The website download contract is recorded in `docs/website.md`; do not invent a `latest.json` writer
 or Sparkle feed. Derive release notes from CHANGELOG, and never expose private repository links in clients.

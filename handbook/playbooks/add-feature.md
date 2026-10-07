@@ -18,7 +18,8 @@ The only way a feature starts. Do not write code first.
 3. If it changes an established way of working: write the ADR (`handbook/playbooks/write-adr.md`).
 4. Implement in small PRs on a `feat/<topic>` branch. Strings follow the add-string playbook for the repository
    type. Each PR description says what, why, how to verify, and carries screenshots for UI.
-5. Add the user-facing line under `## [Unreleased]` in `CHANGELOG.md` (and `CHANGELOG.zh.md`).
+5. If the repository declares a changelog, add its user-facing line under `## [Unreleased]`; update the
+   translated changelog only when the project requires it. Pipelines record rollout and rollback instead.
 
 ## Files this touches
 

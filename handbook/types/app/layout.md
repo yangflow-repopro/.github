@@ -54,7 +54,7 @@ CHANGELOG.md  CHANGELOG.zh.md  LICENSE (terms of service)  THIRD_PARTY.md  SECUR
 - `AGENTS.md` is the tool-neutral brief for AI collaborators: what the project is, directory boundaries,
   common commands, project-specific rules and red lines. It links to this handbook instead of repeating it.
 - `docs/process.md` in a product repository lists only its scopes/labels and anything that differs
-  from `handbook/process.md`.
+  from `handbook/core/process.md`.
 - Version numbers are never edited by hand; use `scripts/bump.sh` (see `handbook/types/app/release.md`).
 - `THIRD_PARTY.md` lists every dependency with version and license; the license text ships in
   `Resources/ThirdPartyLicenses/`.

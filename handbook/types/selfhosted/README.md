@@ -1,10 +1,12 @@
 # Repository type: selfhosted
 
+This is the self-hosted service documentation preset. Select only the stacks and components the project uses;
+record its actual architecture and preset differences in its agent instructions and process document.
+
 ## What it is
 
-A product the user runs on their own host: one container image with a web UI that every client uses, a native macOS
-shell that runs the image on Macs, Docker Compose on Linux, and services the organization operates for the product
-when it needs them. Closed source. `.repo-type` is `selfhosted`.
+A service the user runs on their own host. The current preset uses a container image and web UI; native shells,
+agents and hosted support services are optional and may live in separate repositories. `.repo-type` is `selfhosted`.
 
 ## Stacks
 

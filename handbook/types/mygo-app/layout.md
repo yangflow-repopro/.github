@@ -25,4 +25,4 @@ and removes template-only scripts and planning notes. It validates before writin
 `--repo` defaults to the lowercase product name under the organization.
 Run its tests on disposable copies, including rejected input and a second invocation.
 A neutral demonstration is a template fixture, not a product screen approval; real products
-must replace its spec and design and follow `handbook/ui-workflow.md`.
+must replace its spec and design and follow `handbook/guides/ui-workflow.md`.

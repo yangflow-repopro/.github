@@ -18,12 +18,12 @@ provide every operating-system widget or accessibility behavior; verify those on
 
 ## Localization and accessibility
 
-Ship all nine languages in `handbook/localization.md`, using its app codes as JSON catalog names.
+Ship all nine languages in `handbook/guides/localization.md`, using its app codes as JSON catalog names.
 Embed catalogs with `go:embed`, resolve the system locale via `App.Locale()`, and fall back to English.
 A product may expose an explicit language picker; tests pass the locale directly, never change system settings.
 Translations must have identical keys and formatting placeholders. Label symbol-only buttons.
 Test localized actions using `ui.NewTester`, including a long translation and light/dark state.
-Follow `handbook/ui-workflow.md`: spec, mockup, sign-off, implementation, device acceptance.
+Follow `handbook/guides/ui-workflow.md`: spec, mockup, sign-off, implementation, device acceptance.
 
 ## Tests and evidence
 

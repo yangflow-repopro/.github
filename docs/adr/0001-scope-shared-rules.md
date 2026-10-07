@@ -3,7 +3,7 @@
 
 - Status: accepted
 - Date: 2026-10-07
-- Related: [Documentation](../../handbook/docs.md)
+- Related: [Documentation](../../handbook/core/docs.md)
 
 ## Context
 

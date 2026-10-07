@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check a repository's documentation against the organization's templates (handbook/docs.md).
+"""Check a repository's documentation against the organization's templates (handbook/core/docs.md).
 
     python3 check-docs.py [repo-root]
 
@@ -14,7 +14,7 @@ The repository declares its type in `.repo-type` (app, mygo-app, selfhosted, pip
                                                that removes it)
      "design_icons": ["icon.html", ...]}       extra top-level entries allowed in design/ (icon sources)
 
-When design/README.md carries the `design-README.md v2` marker the ledger checks run (handbook/ui-workflow.md):
+When design/README.md carries the `design-README.md v2` marker the ledger checks run (handbook/guides/ui-workflow.md):
 rows against design/screens, code dirs, status words, dates, screenshots, spec anchors, design/ whitelist.
 Repositories still on v1 are not ledger-checked until they migrate.
 
@@ -109,7 +109,7 @@ def check_against(rel, template_name, text=None):
 
 TEXT_SUFFIXES = {".md", ".swift", ".go", ".mod", ".py", ".sh", ".yml", ".yaml", ".html", ".js", ".json", ".mjs", ".plist", ".txt",
                  ".xcstrings", ".ts", ".tsx", ".mts", ".css"}
-# Where a repository type keeps screen code (handbook/ui-workflow.md); a change there must change design/screens/.
+# Where a repository type keeps screen code (handbook/guides/ui-workflow.md); a change there must change design/screens/.
 SCREEN_CODE = {
     "mygo-app": r"^internal/ui/[^/]+/.+\.go$",
     "selfhosted": r"^web/src/screens/[^/]+/.+\.(?:ts|tsx|css)$|(^|/)UI/[^/]+/.+\.swift$",

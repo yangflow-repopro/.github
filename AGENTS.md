@@ -9,13 +9,13 @@ templates, and the reusable CI workflows used by every product repository.
 ## Sources of truth
 
 `handbook/` is the single source for how repositories are structured, documented, built and released.
-`handbook/templates/manifest.json` says which repository type needs which documents. If a rule here and a
-product repository disagree, this repository wins.
+`handbook/templates/manifest.json` says which repository type needs which documents. Core rules are mandatory. Type and stack presets apply to the components a project actually uses;
+a documented project decision may override a preset, but not the security or maintainer-approval rules.
 
 ## Directory boundaries
 
 ```
-handbook/              rules every repository follows; stacks/ (per language), types/ (per repository type),
+handbook/              core/ (mandatory), guides/ (conditional), stacks/ (per language), types/ (presets),
                        playbooks/, templates/ (common/ and one directory per type)
 .github/workflows/     reusable workflows (workflow_call), called from product repositories
 scripts/               check-docs.py, sync-labels.sh
@@ -34,9 +34,9 @@ scripts/sync-labels.sh <owner/repo>    # apply labels.yml
 ## Project rules
 
 - A change to a template raises its version (`<!-- template: <name> v<N> -->`) and every product repository
-  is rewritten from it (`handbook/docs.md`).
+  migrates explicitly with its pinned handbook revision (`handbook/core/docs.md`).
 - A change to a reusable workflow is tested from a product repository's branch before it is merged.
 
 ## Red lines
 
-This repository is public: no credentials, no internal hostnames, no product names. See `handbook/agents.md`.
+This repository is public: no credentials, no internal hostnames, no product names. See `handbook/core/agents.md`.

@@ -2,7 +2,9 @@
 
 A self-hosted product (`.repo-type` `selfhosted`) is one container image that holds the whole product, a web UI
 that every client uses, a native macOS shell that runs the image on Macs, and, when the product needs one, a
-service the organization operates. Every such repository has this shape.
+service the organization operates. This is the default layout, not a required set of components.
+Projects declare included components and their real paths in AGENTS.md and record deviations in docs/process.md;
+a client may live in another repository and a native shell is optional.
 
 ```
 core/                      The server inside the image (TypeScript on Node.js)
