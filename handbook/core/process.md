@@ -89,9 +89,18 @@ PR (see `handbook/guides/security.md`).
 
 - One GitHub Milestone per development milestone, with one **tracking issue** (label `milestone`) whose
   body holds goal, scope, acceptance checklist and progress. Tasks are sub-issues of it.
-- Split tasks only at that milestone's spec step; earlier findings change later approaches.
+- Early findings may be recorded as Bug or Decision issues before a milestone spec exists. Record whether the
+  evidence is reproduced, observed or a static hypothesis, with the relevant expected contract and environment.
+- Split implementation tasks only at that milestone's spec step; earlier findings change later approaches.
+  A proposed tracker does not approve scope, select a release version or authorize implementation.
+- Tasks record real blocking dependencies, verification/manual acceptance and data, configuration, protocol or
+  rollback impact. Use native sub-issue and dependency relationships when available, with explicit issue links
+  as the fallback; do not manufacture dependencies. `None` is valid for no dependencies or impact.
+- Keep the existing type/status labels: `fix`, `feat`, `perf` and `security` describe the work or review needed.
+  Remove `unverified` only after recording measured evidence; remove `needs-decision` only after recording the
+  maintainer's decision. Shared optional form fields do not require rewriting existing issues.
 - File an issue as soon as something comes up; nothing lives only in chat. Untested technical
-  assumptions get `unverified`; items awaiting the maintainer get `needs-decision`; post-1.0 work goes
+  assumptions get `unverified`; items awaiting the maintainer get `needs-decision`; for versioned products, post-1.0 work goes
   to a "Later" milestone.
 - Shared labels are defined in `labels.yml` at the root of this repository and applied with
   `scripts/sync-labels.sh`. Type labels match commit types; status labels are `milestone`,
