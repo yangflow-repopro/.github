@@ -32,6 +32,7 @@ required document to its template.
 
 ## Workflows
 
-`selfhosted-ci.yml` and `selfhosted-release.yml` (added with the first code and the first release, see
-`handbook/types/selfhosted/code.md` and `handbook/types/selfhosted/release.md`), `macos-ci.yml` for the shell,
-`docs-check.yml`.
+Projects provide their own service CI and release workflows. Shared `selfhosted-ci.yml` and
+`selfhosted-release.yml` are not provided yet; see the CI expectations in `handbook/types/selfhosted/code.md`
+and the release contract in `handbook/types/selfhosted/release.md`. `macos-ci.yml` applies to a shipped Swift
+shell; `docs-check.yml` checks the declared documents.

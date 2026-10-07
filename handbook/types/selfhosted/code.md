@@ -88,13 +88,16 @@ English literal passed to `t("…")`, which is also the key in `web/src/i18n/<co
 
 ## CI
 
-Every PR runs the shared `selfhosted-ci.yml` reusable workflow on GitHub-hosted Linux runners:
+Projects currently run their own CI; this repository does not provide `selfhosted-ci.yml` yet.
+Check the shipped components against the expectations below using the project's actual CI commands.
+These are responsibilities, not mandatory job names or a requirement to add absent components:
 
 | Job | Does |
 |---|---|
-| check | the TypeScript stack's CI steps · `check-version.sh` · `check-docs.py` · `scan_secrets.py` |
+| check | lint, type checks and tests for the actual stacks · version consistency · documentation · secret scanning |
 | image | build the image for `linux/amd64` · report size · start it with compose · Playwright end-to-end and accessibility · image vulnerability scan |
 | shell | `macos-ci.yml` on `macos/` (`handbook/stacks/swift.md`, CI), only when the PR changes `macos/` |
 
-Pushes to `main` also build `linux/arm64`. The workflow is added to this repository together with the first
-`selfhosted` code and is tested from that repository's branch before it is merged, like every reusable workflow.
+Container projects also verify each architecture they distribute; a native shell job applies only if the project
+ships one. Shared CI is extracted only when current consumers need it and it has been tested from a consumer
+branch. Until then, document the project-local checks in its process document; do not call a nonexistent workflow.

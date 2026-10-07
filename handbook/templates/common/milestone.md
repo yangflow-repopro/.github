@@ -1,8 +1,8 @@
-<!-- template: milestone.md v1 -->
-<!-- One iteration. Header quote line keeps the five fields. Released milestones keep only v<X.Y>.md. -->
-# v<X.Y> <Title>
+<!-- template: milestone.md v2 -->
+<!-- One iteration. Use a release version or an unversioned title; archive an unversioned iteration as YYYY-MM-DD-topic.md. -->
+# <Version or iteration title>
 
-> Issue: #<n> · Spec: `docs/spec.md#<anchor>` · Screens: `design/screens/<screen>.html` · Status: <planned | in progress | released>
+> Issue: #<n> · Requirement: `<actual requirement document>#<anchor>` · Screens: <design file, or None for no UI change> · Status: <planned | in progress | done | released>
 
 ## Goal
 

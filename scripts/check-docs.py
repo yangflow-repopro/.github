@@ -28,6 +28,7 @@ PR_TITLE and PR_LABELS (comma separated):
 Exit status 1 when any check fails; every problem is printed as `path: message`.
 """
 import fnmatch
+from datetime import date
 import json
 import re
 import subprocess
@@ -272,10 +273,16 @@ def main():
             rel = str(p.relative_to(ROOT))
             if re.fullmatch(r"v\d+\.\d+-security\.md", p.name):
                 check_against(rel, manifest["patterns"]["docs/milestones/v*-security.md"])
-            elif re.fullmatch(r"v\d+\.\d+\.md|next\.md", p.name):
+            elif re.fullmatch(r"v\d+\.\d+\.md|next\.md|\d{4}-\d{2}-\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*\.md", p.name):
+                if p.name[0].isdigit():
+                    try:
+                        date.fromisoformat(p.name[:10])
+                    except ValueError:
+                        err(rel, "invalid milestone date: use YYYY-MM-DD")
+                        continue
                 check_against(rel, manifest["types"][repo_type]["milestone"])
             else:
-                err(rel, "milestone files are v<X.Y>.md, v<X.Y>-security.md or next.md")
+                err(rel, "milestone files are v<X.Y>.md, v<X.Y>-security.md, next.md or YYYY-MM-DD-topic.md")
 
     # 3b. third-party table versus the resolved Swift packages
     third = ROOT / "THIRD_PARTY.md"

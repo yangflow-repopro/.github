@@ -1,8 +1,8 @@
-<!-- template: selfhosted/milestone.md v1 -->
-<!-- One iteration of a self-hosted product. Header quote line keeps the six fields. Released milestones keep only v<X.Y>.md. -->
-# v<X.Y> <Title>
+<!-- template: selfhosted/milestone.md v2 -->
+<!-- One iteration. Use a release version or an unversioned title; archive an unversioned iteration as YYYY-MM-DD-topic.md. -->
+# <Version or iteration title>
 
-> Issue: #<n> · Spec: `docs/spec.md#<anchor>` · Screens: `design/screens/<screen>.html` · Hosts: <macOS app, Linux compose> · Image: <unchanged | new> · Status: <planned | in progress | released>
+> Issue: #<n> · Requirement: `<actual requirement document>#<anchor>` · Screens: <design file, or None for no UI change> · Hosts: <shipped runtimes or deployment targets> · Image: <unchanged | new | None if no image> · Status: <planned | in progress | done | released>
 
 ## Goal
 
@@ -30,7 +30,7 @@
 
 ## Acceptance checklist
 
-- [ ] <Observable result> (checked on: <macOS app | Linux compose | phone>)
+- [ ] <Observable result> (checked on: <actual runtime or device>)
 
 ## Tasks
 

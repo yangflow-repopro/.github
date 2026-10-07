@@ -86,9 +86,10 @@ a type's pages, so every type that uses the language shares them.
 
 ## Names
 
-- Milestone documents: `v<X.Y>.md` (the release they describe) and `v<X.Y>-security.md`. Work in progress for
-  the next release lives in `docs/milestones/next.md` and is renamed when the version is chosen. Internal
-  numbered milestones are not kept after the release that finished them.
+- Milestone documents: `next.md` while an iteration is in progress. Versioned releases use `v<X.Y>.md` and
+  `v<X.Y>-security.md`; unversioned completed iterations use `YYYY-MM-DD-topic.md` with a lowercase topic.
+  Record the actual requirement document; Screens may be `None`. A date-based archive does not imply a release or tag.
+  Existing version-named records stay valid; do not rename completed history solely for this convention.
 - ADRs: `NNNN-title.md`, four digits, lowercase hyphenated title; the index lists every file once, with the
   same title as the file's H1.
 - Screens: `design/screens/<screen>.html`, named like the screen's code directory (`handbook/guides/ui-workflow.md`, Code
@@ -99,7 +100,9 @@ a type's pages, so every type that uses the language shares them.
 `Issue` (the tracking issue) → `docs/milestones/next.md` (goal, scope, decisions) → design (`design/screens/`)
 → implementation PRs → acceptance on the project's declared runtime or devices.
 Versioned products rename `next.md` to `v<X.Y>.md`, update their changelog and tag the release.
-Pipelines follow their rollout and rollback rules; they do not acquire release tags or changelogs from this lifecycle. The playbooks in `playbooks/` list the steps and the files each touches.
+Unversioned iterations archive `next.md` as `YYYY-MM-DD-topic.md` with status `done`. Pipelines follow their
+rollout and rollback rules; they do not acquire release tags or changelogs from this lifecycle.
+The playbooks in `playbooks/` list the steps and the files each touches.
 
 The lifecycle of a screen, the ledger in `design/README.md` and the `design/` whitelist are in
 `handbook/guides/ui-workflow.md`.
