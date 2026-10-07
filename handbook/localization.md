@@ -16,6 +16,8 @@ Apps, self-hosted products and websites ship the same nine languages. The langua
 | Spanish | `es` | `es.json` | `es`, `/es` |
 | Portuguese (Brazil) | `pt-BR` | `pt-BR.json` | `pt`, `/pt` |
 
+MyGo native apps use the app codes in embedded JSON catalogs; see `handbook/types/mygo-app/code.md`.
+
 A self-hosted product's macOS shell uses the app codes in its own String Catalog.
 
 A pipeline has no UI copy. The languages of the content it generates are listed per product in the pipeline's

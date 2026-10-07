@@ -7,11 +7,12 @@ documents and workflows in a form that builds from the first commit. `.repo-type
 
 ## Stacks
 
-The stacks of the type it starts; today `handbook/stacks/swift.md` and `handbook/stacks/python.md` (macOS apps).
+The stacks of the type it starts; `handbook/stacks/swift.md` for macOS apps, `handbook/stacks/go.md` for MyGo native apps,
+and `handbook/stacks/python.md` for scripts.
 
 ## Pages
 
-The pages of the type it starts (`handbook/types/app/README.md`), and [the handbook index](../../README.md).
+The pages of the type it starts (`handbook/types/app/README.md` or `handbook/types/mygo-app/README.md`), and [the handbook index](../../README.md).
 
 ## Templates
 

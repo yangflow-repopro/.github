@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "pointers": [
     "CLAUDE.md",
     "GEMINI.md",
@@ -108,6 +108,7 @@
     "template": {
       "stacks": [
         "swift",
+        "go",
         "python"
       ],
       "documents": {
@@ -123,6 +124,30 @@
       "documents": {
         "README.md": "org/README.md",
         "AGENTS.md": "common/AGENTS.md"
+      },
+      "milestone": "common/milestone.md"
+    },
+    "mygo-app": {
+      "stacks": [
+        "go",
+        "python"
+      ],
+      "documents": {
+        "README.md": "mygo-app/README.md",
+        "AGENTS.md": "common/AGENTS.md",
+        "SECURITY.md": "common/SECURITY.md",
+        "CHANGELOG.md": "common/CHANGELOG.md",
+        "CHANGELOG.zh.md": "common/CHANGELOG.zh.md",
+        "THIRD_PARTY.md": "mygo-app/THIRD_PARTY.md",
+        "docs/spec.md": "common/spec.md",
+        "docs/design.md": "app/design.md",
+        "docs/roadmap.md": "common/roadmap.md",
+        "docs/legal.md": "common/legal.md",
+        "docs/website.md": "common/website.md",
+        "docs/process.md": "common/process.md",
+        "docs/adr/README.md": "common/adr-index.md",
+        "design/README.md": "common/design-README.md",
+        "LICENSE": "mygo-app/LICENSE"
       },
       "milestone": "common/milestone.md"
     }

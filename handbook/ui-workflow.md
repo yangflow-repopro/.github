@@ -1,6 +1,6 @@
 # UI workflow
 
-How a screen goes from an idea to an accepted, shipped view. It applies to every repository with a UI (`app` and
+How a screen goes from an idea to an accepted, shipped view. It applies to every repository with a UI (`app`, `mygo-app` and
 `selfhosted`; a `pipeline` has no UI and skips it); a repository's
 `docs/process.md` records only differences. `scripts/check-docs.py` and `scripts/design-review.py` enforce and
 support it.
@@ -51,6 +51,13 @@ spec -> design -> review -> develop -> device acceptance -> archive
 | Captures | Exported from the running app on a Mac: every state, light and dark (`handbook/types/app/captures.md`) | `scripts/capture-screens.mjs` against the running image: every state at each viewport the product declares in `docs/spec.md`, light and dark, named `<state>-<viewport>-<scheme>.png`; shell screens as for apps |
 | Where the maintainer accepts | On a Mac | Wherever each declared viewport is used: the macOS shell's window, a desktop browser, a real phone |
 | Automated UI checks | `scripts/ax-audit.swift` | The accessibility check in the end-to-end suite (`handbook/types/selfhosted/code.md`) |
+
+### MyGo native apps
+
+Screen code lives in `internal/ui/<screen>/`. Use localized control labels and stable IDs,
+with `ui.NewTester` covering each state. Device captures, keyboard and screen reader checks
+are required on every supported OS (`handbook/types/mygo-app/code.md`). All design gates and
+ledger rules apply; headless images do not substitute for device captures.
 
 ## Status vocabulary
 

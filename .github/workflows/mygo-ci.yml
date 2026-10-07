@@ -1,0 +1,27 @@
+# Reusable checks for pure Go MyGo applications and their templates.
+name: MyGo CI
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - run: scripts/check.sh --cross
+      - run: python3 scripts/scan_secrets.py
+      - name: Race detector
+        run: go test -race ./...

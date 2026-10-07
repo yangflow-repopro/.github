@@ -21,6 +21,7 @@ per repository type.
 
 | File | Covers |
 |---|---|
+| [stacks/go.md](stacks/go.md) | Toolchain, code, tests and CI for Go |
 | [stacks/swift.md](stacks/swift.md) | Toolchain, concurrency, errors, logging, tests, CI for Swift |
 | [stacks/typescript.md](stacks/typescript.md) | Toolchain, code, logging, tests for TypeScript |
 | [stacks/python.md](stacks/python.md) | Toolchain, scripts, tests for Python |
@@ -31,6 +32,7 @@ Each type has a directory with the same index (`README.md`: what it is, stacks, 
 
 | Type | Index |
 |---|---|
+| `mygo-app` | [types/mygo-app/](types/mygo-app/README.md) |
 | `app` | [types/app/](types/app/README.md) |
 | `selfhosted` | [types/selfhosted/](types/selfhosted/README.md) |
 | `pipeline` | [types/pipeline/](types/pipeline/README.md) |
