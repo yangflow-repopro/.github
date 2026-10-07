@@ -1,5 +1,5 @@
-<!-- template: spec.md v1 -->
-<!-- Final specification. Headings are stable names (no numbers); other documents link docs/spec.md#<slug>. Licensing and Updates are always the last two flows. -->
+<!-- template: spec.md v2 -->
+<!-- Final specification. Headings are stable names (no numbers); other documents link docs/spec.md#<slug>. Document the flows the project actually provides; licensing and updates apply only when present. -->
 # <Name> specification
 
 ## Decisions
@@ -8,7 +8,8 @@
 
 ## Information architecture
 
-<Windows, screens, navigation; link `design/screens/<screen>.html` per screen.>
+<Entry points and how users or operators reach the functionality. For a UI: windows, screens and navigation;
+link `design/screens/<screen>.html` per screen. A command-line or service project describes commands or APIs.>
 
 ## Data model
 
@@ -19,6 +20,9 @@
 <The parts of the code and what each owns.>
 
 ## Key flows
+
+<Describe the relevant user or operator flows. Keep Licensing and Updates when the project provides them;
+omit these example subsections when not applicable. Existing product requirements remain in its spec.>
 
 ### Licensing
 

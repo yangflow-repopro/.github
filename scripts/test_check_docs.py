@@ -322,6 +322,31 @@ class DocumentStructureTest(unittest.TestCase):
             self.assertEqual(run(root)[0], 1)
 
 
+class MilestoneNamingTest(unittest.TestCase):
+    def check(self, name, content=None):
+        tmp, root = make(repo_type="pipeline", files={"docs/milestones/" + name:
+                         content if content is not None else template("pipeline/milestone.md")})
+        with tmp:
+            return run(root)
+
+    def test_unversioned_iteration_can_be_archived_by_date(self):
+        self.assertEqual(self.check("2026-10-08-tooling.md"), (0, "docs ok\n"))
+
+    def test_dated_iteration_still_checks_its_template(self):
+        code, out = self.check("2026-10-08-tooling.md", "# Work\n")
+        self.assertEqual(code, 1)
+        self.assertIn("pipeline/milestone.md", out)
+
+    def test_invalid_archive_date_is_rejected(self):
+        code, out = self.check("2026-99-99-tooling.md")
+        self.assertEqual(code, 1)
+        self.assertIn("invalid milestone date", out)
+
+    def test_legacy_version_and_next_names_remain_valid(self):
+        for name in ("next.md", "v1.0.md"):
+            self.assertEqual(self.check(name), (0, "docs ok\n"))
+
+
 class HandbookTest(unittest.TestCase):
     def test_reference_to_missing_handbook_file(self):
         gone = "handbook/" + "no-such-page.md"  # split so this file does not reference it itself
